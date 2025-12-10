@@ -1,12 +1,14 @@
 import { ViewTransition } from 'react';
 import { format, isToday } from 'date-fns';
 
+import { ensureSession } from '~/lib/auth';
 import { StickyNotesBoard } from '~/features/sticky-notes/components/sticky-notes-board';
 import { findStickyNotesBoardForDate } from '~/features/sticky-notes/queries';
 
 export default async function StickyNotesDatePage({
   params,
 }: PageProps<'/sticky-notes/[date]'>) {
+  await ensureSession();
   const { date } = await params;
   const stickyNotesBoardResult = await findStickyNotesBoardForDate(date);
 

@@ -2,7 +2,10 @@ import { ViewTransition } from 'react';
 import Link from 'next/link';
 import { StickyNoteIcon } from 'lucide-react';
 
-export default function Home() {
+import { ensureSession } from '~/lib/auth';
+
+export default async function Home() {
+  await ensureSession();
   return (
     <section className='mx-auto max-w-(--breakpoint-xl) p-8'>
       <Link
