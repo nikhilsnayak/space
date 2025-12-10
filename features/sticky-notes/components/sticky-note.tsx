@@ -9,7 +9,7 @@ import { cn } from '~/lib/utils';
 import { Button } from '~/components/ui/button';
 
 import type { Note } from '../schema';
-import { useStickyNotesBoard } from './sticky-notes-board';
+import { useStickyNotesBoard } from './context/sticky-notes-board-context';
 
 const caveat = Caveat({ subsets: ['latin'], weight: '400' });
 
@@ -20,13 +20,13 @@ interface StickyNoteProps {
 export function StickyNote({
   note: { id, text, pos, color, rotate },
 }: StickyNoteProps) {
-  const [isEditing, setIsEditing] = useState(!text.trim());
-  const dragControls = useDragControls();
   const board = useStickyNotesBoard();
+  const [isEditing, setIsEditing] = useState(board.editable && !text.trim());
+  const dragControls = useDragControls();
 
   return (
     <motion.div
-      drag
+      drag={board.editable}
       dragControls={dragControls}
       dragListener={false}
       dragMomentum={false}
@@ -61,7 +61,11 @@ export function StickyNote({
         type: 'spring',
         bounce: 0.35,
       }}
-      onDoubleClick={() => setIsEditing(true)}
+      onDoubleClick={() => {
+        if (board.editable) {
+          setIsEditing(true);
+        }
+      }}
       onClick={(e) => {
         e.stopPropagation();
       }}
@@ -83,40 +87,44 @@ export function StickyNote({
       `,
       }}
     >
-      <Button
-        variant='destructive'
-        size='icon'
-        className='absolute top-0 right-0 size-5 translate-x-1/2 -translate-y-1/2 rounded-full p-0'
-        onClick={() => board.deleteNote(id)}
-      >
-        <XIcon className='size-4' />
-      </Button>
-      <motion.div
-        initial={{
-          opacity: 0,
-          scale: 0.7,
-          y: -10,
-        }}
-        animate={{
-          opacity: 1,
-          scale: 1,
-          y: 0,
-        }}
-        whileHover={{
-          scale: 1.15,
-          backgroundColor: 'rgba(31, 41, 55, 0.8)',
-          boxShadow: '0px 2px 12px 2px rgba(31,41,55,0.14)',
-        }}
-        transition={{
-          duration: 0.33,
-          type: 'spring',
-          bounce: 0.35,
-        }}
-        onPointerDown={(e) => {
-          dragControls.start(e);
-        }}
-        className='mx-auto mt-1 mb-2 h-2.5 w-12 cursor-grab rounded-full bg-gray-700 transition-shadow'
-      />
+      {board.editable ? (
+        <>
+          <Button
+            variant='destructive'
+            size='icon'
+            className='absolute top-0 right-0 size-5 translate-x-1/2 -translate-y-1/2 rounded-full p-0'
+            onClick={() => board.deleteNote(id)}
+          >
+            <XIcon className='size-4' />
+          </Button>
+          <motion.div
+            initial={{
+              opacity: 0,
+              scale: 0.7,
+              y: -10,
+            }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              y: 0,
+            }}
+            whileHover={{
+              scale: 1.15,
+              backgroundColor: 'rgba(31, 41, 55, 0.8)',
+              boxShadow: '0px 2px 12px 2px rgba(31,41,55,0.14)',
+            }}
+            transition={{
+              duration: 0.33,
+              type: 'spring',
+              bounce: 0.35,
+            }}
+            onPointerDown={(e) => {
+              dragControls.start(e);
+            }}
+            className='mx-auto mt-1 mb-2 h-2.5 w-12 cursor-grab rounded-full bg-gray-700 transition-shadow'
+          />
+        </>
+      ) : null}
       {isEditing ? (
         <textarea
           autoFocus

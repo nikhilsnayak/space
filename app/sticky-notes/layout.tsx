@@ -1,4 +1,7 @@
-import { ViewTransition } from 'react';
+import { Suspense, ViewTransition } from 'react';
+
+import { StickyNotesBoardsList } from '~/features/sticky-notes/components/sticky-notes-boards-list';
+import { getStickyNotesBoards } from '~/features/sticky-notes/queries';
 
 export default function StickyNotesLayout({
   children,
@@ -11,8 +14,20 @@ export default function StickyNotesLayout({
             Sticky Notes
           </h1>
         </ViewTransition>
+        <Suspense>
+          <StickyNotesBoards />
+        </Suspense>
       </aside>
       {children}
     </section>
   );
+}
+
+async function StickyNotesBoards() {
+  const boardsResult = await getStickyNotesBoards();
+  if (boardsResult.isErr()) {
+    return <div>{boardsResult.error.message}</div>;
+  }
+  const { boards } = boardsResult.value;
+  return <StickyNotesBoardsList boards={boards} />;
 }

@@ -1,34 +1,17 @@
 'use client';
 
-import {
-  createContext,
-  startTransition,
-  use,
-  useActionState,
-  useOptimistic,
-  useRef,
-} from 'react';
+import { startTransition, useActionState, useOptimistic, useRef } from 'react';
 import { AnimatePresence } from 'motion/react';
+
+import { TODAY } from '~/lib/constants';
+import { cn } from '~/lib/utils';
 
 import blackBoardImage from '../assets/black-board.jpg';
 import { upsertStickyNotesForDate } from '../mutations';
 import type { Note } from '../schema';
 import { getRandomNoteColor, getRandomNoteRotate } from '../utils';
+import { StickyNotesBoardContext } from './context/sticky-notes-board-context';
 import { StickyNote } from './sticky-note';
-
-const StickyNotesBoardContext = createContext<{
-  ref: React.RefObject<HTMLDivElement | null>;
-  updateNote: (id: string, updates: Partial<Note>) => void;
-  deleteNote: (id: string) => void;
-} | null>(null);
-
-export function useStickyNotesBoard() {
-  const board = use(StickyNotesBoardContext);
-  if (!board) {
-    throw new Error('Board not found');
-  }
-  return board;
-}
 
 interface StickyNotesBoardProps {
   date: string;
@@ -100,10 +83,22 @@ export function StickyNotesBoard({
     performUpsert(optimisticNotes.filter((note) => note.id !== id));
   };
 
+  const editable = date === TODAY;
+
+  const board = {
+    ref: boardRef,
+    editable,
+    updateNote,
+    deleteNote,
+  };
+
   return (
     <div
-      className='relative isolate overflow-hidden p-4'
       ref={boardRef}
+      className={cn(
+        'relative isolate overflow-hidden bg-cover bg-center bg-no-repeat',
+        !editable && 'pointer-events-none'
+      )}
       style={{
         backgroundImage: `url(${blackBoardImage.src})`,
       }}
@@ -115,9 +110,7 @@ export function StickyNotesBoard({
         addNote({ x, y });
       }}
     >
-      <StickyNotesBoardContext
-        value={{ ref: boardRef, updateNote, deleteNote }}
-      >
+      <StickyNotesBoardContext value={board}>
         <AnimatePresence>
           {optimisticNotes.map((note) => (
             <StickyNote key={note.id} note={note} />

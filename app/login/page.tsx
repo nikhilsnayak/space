@@ -21,16 +21,9 @@ export default function LoginPage() {
       <div className='space-y-4 text-center'>
         {errorMessage && <p className='text-destructive'>{errorMessage}</p>}
         <Button
-          onClick={async () => {
-            const response = await fetch('/api/auth/sign-in', {
-              method: 'POST',
-            });
-            const data = (await response.json()) as { redirectUrl: string };
-            window.location.href = data.redirectUrl;
-          }}
-        >
-          Login
-        </Button>
+          nativeButton={false}
+          render={<a href='/api/auth/sign-in'>Login</a>}
+        />
       </div>
     </section>
   );
