@@ -1,12 +1,10 @@
 'use server';
 
-import { revalidateTag } from 'next/cache';
 import { ResultAsync } from 'neverthrow';
 import z from 'zod';
 
 import { db } from '~/lib/db';
 
-import { CACHE_PREFIX } from './constants';
 import { NoteSchema, StickyNotesBoard, type Note } from './schema';
 
 export async function upsertStickyNotesForDate(date: string, notes: Note[]) {
@@ -35,8 +33,6 @@ export async function upsertStickyNotesForDate(date: string, notes: Note[]) {
   if (result.isErr()) {
     return { type: 'error', message: result.error.message } as const;
   }
-
-  revalidateTag(`${CACHE_PREFIX}:${date}`, 'max');
 
   return {
     type: 'success',

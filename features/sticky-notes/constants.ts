@@ -4,5 +4,3 @@ export const NOTE_COLORS = [
   '#bfdbfe', // Blue
   '#bbf7d0', // Green
 ] as const;
-
-export const CACHE_PREFIX = 'sticky-notes';
