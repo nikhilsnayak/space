@@ -27,7 +27,7 @@ export default async function StickyNotesDatePage({
             ? `Today - ${format(date, 'dd MMM')}`
             : format(date, 'EEEE - dd MMM yyyy')}
         </h2>
-        <LinkButton href='/' size='icon-lg' variant='outline'>
+        <LinkButton href='/' size='icon-sm' variant='outline'>
           <HomeIcon />
         </LinkButton>
       </div>

@@ -69,7 +69,7 @@ export function StickyNote({
       onClick={(e) => {
         e.stopPropagation();
       }}
-      className='absolute top-0 left-0 h-50 w-50 border text-gray-800'
+      className='absolute top-0 left-0 grid h-50 w-50 grid-rows-[auto_1fr] border text-gray-800'
       style={{
         x: pos.x,
         y: pos.y,
@@ -127,6 +127,7 @@ export function StickyNote({
       ) : null}
       {isEditing ? (
         <textarea
+          id={id}
           autoFocus
           defaultValue={text}
           placeholder='add your note here...'
@@ -137,14 +138,14 @@ export function StickyNote({
             board.updateNote(id, { text: newText });
           }}
           className={cn(
-            'h-full w-full cursor-text resize-none border-none p-2 text-base outline-none',
+            'w-full cursor-text resize-none border-none p-2 text-base outline-none',
             caveat.className
           )}
         />
       ) : (
         <pre
           className={cn(
-            'h-full w-full overflow-x-hidden overflow-y-auto p-2 text-base wrap-anywhere whitespace-pre-wrap select-none',
+            'w-full overflow-x-hidden overflow-y-auto p-2 text-base wrap-anywhere whitespace-pre-wrap select-none',
             caveat.className
           )}
         >

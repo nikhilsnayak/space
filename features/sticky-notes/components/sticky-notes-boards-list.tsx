@@ -14,7 +14,7 @@ export function StickyNotesBoardsList({ boards }: { boards: string[] }) {
       {(boards[0] === TODAY ? boards : [TODAY, ...boards]).map((board) => (
         <li key={board}>
           <LinkButton
-            href={{ pathname: `/sticky-notes/${board}` }}
+            href={`/sticky-notes/${board}`}
             variant={date === board ? 'default' : 'secondary'}
             className='w-full'
           >
