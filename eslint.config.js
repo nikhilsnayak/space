@@ -1,7 +1,5 @@
-import { defineConfig } from "eslint/config";
-import nextVitals from "eslint-config-next/core-web-vitals";
-import nextTs from "eslint-config-next/typescript";
+//  @ts-check
 
-const eslintConfig = defineConfig([...nextVitals, ...nextTs]);
+import { tanstackConfig } from '@tanstack/eslint-config';
 
-export default eslintConfig;
+export default [...tanstackConfig];

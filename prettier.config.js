@@ -5,31 +5,7 @@ const config = {
   singleQuote: true,
   jsxSingleQuote: true,
   bracketSpacing: true,
-  importOrder: [
-    '^(react/(.*)$)|^(react$)',
-    '^(next/(.*)$)|^(next$)',
-    '<THIRD_PARTY_MODULES>',
-    '',
-    '^types$',
-    '^~/env(.*)$',
-    '^~/types/(.*)$',
-    '^~/config/(.*)$',
-    '^~/lib/(.*)$',
-    '^~/hooks/(.*)$',
-    '^~/components/ui/(.*)$',
-    '^~/components/(.*)$',
-    '^~/features/(.*)$',
-    '^~/styles/(.*)$',
-    '^~/app/(.*)$',
-    '',
-    '^[./]',
-  ],
-  importOrderParserPlugins: ['typescript', 'jsx', 'decorators-legacy'],
-  importOrderTypeScriptVersion: '5.0.0',
-  plugins: [
-    '@ianvs/prettier-plugin-sort-imports',
-    'prettier-plugin-tailwindcss',
-  ],
+  plugins: ['prettier-plugin-tailwindcss'],
 };
 
 export default config;

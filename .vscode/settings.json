@@ -3,12 +3,16 @@
     "source.fixAll.eslint": "always",
     "source.removeUnusedImports": "always"
   },
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
-  "workbench.editor.customLabels.patterns": {
-    "**/app/**/page.tsx": "${dirname} - page.tsx",
-    "**/app/**/layout.tsx": "${dirname} - layout.tsx",
-    "**/app/**/route.ts": "${dirname} - route.ts"
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "files.readonlyInclude": {
+    "**/routeTree.gen.ts": true
+  },
+  "files.watcherExclude": {
+    "**/routeTree.gen.ts": true
+  },
+  "search.exclude": {
+    "**/routeTree.gen.ts": true
   },
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.tsdk": "node_modules/typescript/lib"
