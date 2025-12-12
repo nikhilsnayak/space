@@ -1,5 +1,3 @@
-'use client';
-
 import { useRef } from 'react';
 import * as fabric from 'fabric';
 
@@ -7,10 +5,10 @@ export function ImageEditor() {
   const fabricRef = useRef<fabric.Canvas | null>(null);
 
   const canvasRef = (canvas: HTMLCanvasElement) => {
-    fabricRef.current = new fabric.Canvas(canvas);
-
+    const fabricCanvas = new fabric.Canvas(canvas);
+    fabricRef.current = fabricCanvas;
     return () => {
-      fabricRef.current?.destroy();
+      fabricCanvas.dispose();
       fabricRef.current = null;
     };
   };
