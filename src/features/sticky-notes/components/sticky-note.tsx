@@ -1,5 +1,3 @@
-'use client';
-
 import { useState } from 'react';
 import { XIcon } from 'lucide-react';
 import { motion, useDragControls } from 'motion/react';

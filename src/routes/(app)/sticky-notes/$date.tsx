@@ -11,10 +11,10 @@ export const Route = createFileRoute('/(app)/sticky-notes/$date')({
   loader: async ({ params }) => {
     return await findStickyNotesBoardForDate({ data: params });
   },
-  component: StickyNotesDatePage,
+  component: StickyNotesBoardPage,
 });
 
-function StickyNotesDatePage() {
+function StickyNotesBoardPage() {
   const notes = Route.useLoaderData();
   const { date } = Route.useParams();
 

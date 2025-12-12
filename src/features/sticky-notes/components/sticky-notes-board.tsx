@@ -1,5 +1,3 @@
-'use client';
-
 import { startTransition, useActionState, useOptimistic, useRef } from 'react';
 import { AnimatePresence } from 'motion/react';
 

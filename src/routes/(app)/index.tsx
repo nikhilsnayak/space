@@ -2,10 +2,10 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import { ImageIcon, StickyNoteIcon } from 'lucide-react';
 
 export const Route = createFileRoute('/(app)/')({
-  component: Home,
+  component: HomePage,
 });
 
-function Home() {
+function HomePage() {
   return (
     <section className='mx-auto flex max-w-(--breakpoint-xl) items-center gap-4 p-8'>
       <Link
