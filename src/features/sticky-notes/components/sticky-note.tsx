@@ -4,9 +4,10 @@ import { useState } from 'react';
 import { XIcon } from 'lucide-react';
 import { motion, useDragControls } from 'motion/react';
 
-import { useStickyNotesBoard } from './context/sticky-notes-board-context';
-import type { Note } from '../schema';
 import { Button } from '~/components/ui/button';
+
+import { Note } from '../schema';
+import { useStickyNotesBoard } from './context/sticky-notes-board-context';
 
 interface StickyNoteProps {
   note: Note;
@@ -25,7 +26,7 @@ export function StickyNote({
       dragControls={dragControls}
       dragListener={false}
       dragMomentum={false}
-      dragConstraints={board.ref}
+      // dragConstraints={board.ref} // for some f***ing reason the transform was misbehaving with drag constraints. need to investigate further
       whileDrag={{
         scale: 1.1,
         boxShadow: '0px 10px 20px rgba(0,0,0,0.2)',
@@ -68,8 +69,8 @@ export function StickyNote({
       style={{
         x: pos.x,
         y: pos.y,
+        rotate: rotate,
         backgroundColor: color,
-        rotate: `${rotate}deg`,
         backgroundImage: `
         linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.05) 100%),
         repeating-linear-gradient(

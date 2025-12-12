@@ -8,86 +8,89 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as appRouteRouteImport } from './routes/(app)/route'
-import { Route as appIndexRouteImport } from './routes/(app)/index'
-import { Route as ApiSplatRouteImport } from './routes/api.$'
-import { Route as authLoginRouteImport } from './routes/(auth)/login'
-import { Route as appImageEditorRouteImport } from './routes/(app)/image-editor'
-import { Route as appStickyNotesRouteRouteImport } from './routes/(app)/sticky-notes/route'
-import { Route as appStickyNotesIndexRouteImport } from './routes/(app)/sticky-notes/index'
-import { Route as appStickyNotesDateRouteImport } from './routes/(app)/sticky-notes/$date'
+import type { createStart } from '@tanstack/react-start';
+
+import type { getRouter } from './router.tsx';
+import { Route as rootRouteImport } from './routes/__root';
+import { Route as appImageEditorRouteImport } from './routes/(app)/image-editor';
+import { Route as appIndexRouteImport } from './routes/(app)/index';
+import { Route as appRouteRouteImport } from './routes/(app)/route';
+import { Route as appStickyNotesDateRouteImport } from './routes/(app)/sticky-notes/$date';
+import { Route as appStickyNotesIndexRouteImport } from './routes/(app)/sticky-notes/index';
+import { Route as appStickyNotesRouteRouteImport } from './routes/(app)/sticky-notes/route';
+import { Route as authLoginRouteImport } from './routes/(auth)/login';
+import { Route as ApiSplatRouteImport } from './routes/api.$';
 
 const appRouteRoute = appRouteRouteImport.update({
   id: '/(app)',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const appIndexRoute = appIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => appRouteRoute,
-} as any)
+} as any);
 const ApiSplatRoute = ApiSplatRouteImport.update({
   id: '/api/$',
   path: '/api/$',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const authLoginRoute = authLoginRouteImport.update({
   id: '/(auth)/login',
   path: '/login',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const appImageEditorRoute = appImageEditorRouteImport.update({
   id: '/image-editor',
   path: '/image-editor',
   getParentRoute: () => appRouteRoute,
-} as any)
+} as any);
 const appStickyNotesRouteRoute = appStickyNotesRouteRouteImport.update({
   id: '/sticky-notes',
   path: '/sticky-notes',
   getParentRoute: () => appRouteRoute,
-} as any)
+} as any);
 const appStickyNotesIndexRoute = appStickyNotesIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => appStickyNotesRouteRoute,
-} as any)
+} as any);
 const appStickyNotesDateRoute = appStickyNotesDateRouteImport.update({
   id: '/$date',
   path: '/$date',
   getParentRoute: () => appStickyNotesRouteRoute,
-} as any)
+} as any);
 
 export interface FileRoutesByFullPath {
-  '/sticky-notes': typeof appStickyNotesRouteRouteWithChildren
-  '/image-editor': typeof appImageEditorRoute
-  '/login': typeof authLoginRoute
-  '/api/$': typeof ApiSplatRoute
-  '/': typeof appIndexRoute
-  '/sticky-notes/$date': typeof appStickyNotesDateRoute
-  '/sticky-notes/': typeof appStickyNotesIndexRoute
+  '/sticky-notes': typeof appStickyNotesRouteRouteWithChildren;
+  '/image-editor': typeof appImageEditorRoute;
+  '/login': typeof authLoginRoute;
+  '/api/$': typeof ApiSplatRoute;
+  '/': typeof appIndexRoute;
+  '/sticky-notes/$date': typeof appStickyNotesDateRoute;
+  '/sticky-notes/': typeof appStickyNotesIndexRoute;
 }
 export interface FileRoutesByTo {
-  '/image-editor': typeof appImageEditorRoute
-  '/login': typeof authLoginRoute
-  '/api/$': typeof ApiSplatRoute
-  '/': typeof appIndexRoute
-  '/sticky-notes/$date': typeof appStickyNotesDateRoute
-  '/sticky-notes': typeof appStickyNotesIndexRoute
+  '/image-editor': typeof appImageEditorRoute;
+  '/login': typeof authLoginRoute;
+  '/api/$': typeof ApiSplatRoute;
+  '/': typeof appIndexRoute;
+  '/sticky-notes/$date': typeof appStickyNotesDateRoute;
+  '/sticky-notes': typeof appStickyNotesIndexRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/(app)': typeof appRouteRouteWithChildren
-  '/(app)/sticky-notes': typeof appStickyNotesRouteRouteWithChildren
-  '/(app)/image-editor': typeof appImageEditorRoute
-  '/(auth)/login': typeof authLoginRoute
-  '/api/$': typeof ApiSplatRoute
-  '/(app)/': typeof appIndexRoute
-  '/(app)/sticky-notes/$date': typeof appStickyNotesDateRoute
-  '/(app)/sticky-notes/': typeof appStickyNotesIndexRoute
+  __root__: typeof rootRouteImport;
+  '/(app)': typeof appRouteRouteWithChildren;
+  '/(app)/sticky-notes': typeof appStickyNotesRouteRouteWithChildren;
+  '/(app)/image-editor': typeof appImageEditorRoute;
+  '/(auth)/login': typeof authLoginRoute;
+  '/api/$': typeof ApiSplatRoute;
+  '/(app)/': typeof appIndexRoute;
+  '/(app)/sticky-notes/$date': typeof appStickyNotesDateRoute;
+  '/(app)/sticky-notes/': typeof appStickyNotesIndexRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
+  fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
     | '/sticky-notes'
     | '/image-editor'
@@ -95,15 +98,15 @@ export interface FileRouteTypes {
     | '/api/$'
     | '/'
     | '/sticky-notes/$date'
-    | '/sticky-notes/'
-  fileRoutesByTo: FileRoutesByTo
+    | '/sticky-notes/';
+  fileRoutesByTo: FileRoutesByTo;
   to:
     | '/image-editor'
     | '/login'
     | '/api/$'
     | '/'
     | '/sticky-notes/$date'
-    | '/sticky-notes'
+    | '/sticky-notes';
   id:
     | '__root__'
     | '/(app)'
@@ -113,119 +116,117 @@ export interface FileRouteTypes {
     | '/api/$'
     | '/(app)/'
     | '/(app)/sticky-notes/$date'
-    | '/(app)/sticky-notes/'
-  fileRoutesById: FileRoutesById
+    | '/(app)/sticky-notes/';
+  fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  appRouteRoute: typeof appRouteRouteWithChildren
-  authLoginRoute: typeof authLoginRoute
-  ApiSplatRoute: typeof ApiSplatRoute
+  appRouteRoute: typeof appRouteRouteWithChildren;
+  authLoginRoute: typeof authLoginRoute;
+  ApiSplatRoute: typeof ApiSplatRoute;
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/(app)': {
-      id: '/(app)'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof appRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/(app)';
+      path: '';
+      fullPath: '';
+      preLoaderRoute: typeof appRouteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/(app)/': {
-      id: '/(app)/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof appIndexRouteImport
-      parentRoute: typeof appRouteRoute
-    }
+      id: '/(app)/';
+      path: '/';
+      fullPath: '/';
+      preLoaderRoute: typeof appIndexRouteImport;
+      parentRoute: typeof appRouteRoute;
+    };
     '/api/$': {
-      id: '/api/$'
-      path: '/api/$'
-      fullPath: '/api/$'
-      preLoaderRoute: typeof ApiSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/api/$';
+      path: '/api/$';
+      fullPath: '/api/$';
+      preLoaderRoute: typeof ApiSplatRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/(auth)/login': {
-      id: '/(auth)/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof authLoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/(auth)/login';
+      path: '/login';
+      fullPath: '/login';
+      preLoaderRoute: typeof authLoginRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/(app)/image-editor': {
-      id: '/(app)/image-editor'
-      path: '/image-editor'
-      fullPath: '/image-editor'
-      preLoaderRoute: typeof appImageEditorRouteImport
-      parentRoute: typeof appRouteRoute
-    }
+      id: '/(app)/image-editor';
+      path: '/image-editor';
+      fullPath: '/image-editor';
+      preLoaderRoute: typeof appImageEditorRouteImport;
+      parentRoute: typeof appRouteRoute;
+    };
     '/(app)/sticky-notes': {
-      id: '/(app)/sticky-notes'
-      path: '/sticky-notes'
-      fullPath: '/sticky-notes'
-      preLoaderRoute: typeof appStickyNotesRouteRouteImport
-      parentRoute: typeof appRouteRoute
-    }
+      id: '/(app)/sticky-notes';
+      path: '/sticky-notes';
+      fullPath: '/sticky-notes';
+      preLoaderRoute: typeof appStickyNotesRouteRouteImport;
+      parentRoute: typeof appRouteRoute;
+    };
     '/(app)/sticky-notes/': {
-      id: '/(app)/sticky-notes/'
-      path: '/'
-      fullPath: '/sticky-notes/'
-      preLoaderRoute: typeof appStickyNotesIndexRouteImport
-      parentRoute: typeof appStickyNotesRouteRoute
-    }
+      id: '/(app)/sticky-notes/';
+      path: '/';
+      fullPath: '/sticky-notes/';
+      preLoaderRoute: typeof appStickyNotesIndexRouteImport;
+      parentRoute: typeof appStickyNotesRouteRoute;
+    };
     '/(app)/sticky-notes/$date': {
-      id: '/(app)/sticky-notes/$date'
-      path: '/$date'
-      fullPath: '/sticky-notes/$date'
-      preLoaderRoute: typeof appStickyNotesDateRouteImport
-      parentRoute: typeof appStickyNotesRouteRoute
-    }
+      id: '/(app)/sticky-notes/$date';
+      path: '/$date';
+      fullPath: '/sticky-notes/$date';
+      preLoaderRoute: typeof appStickyNotesDateRouteImport;
+      parentRoute: typeof appStickyNotesRouteRoute;
+    };
   }
 }
 
 interface appStickyNotesRouteRouteChildren {
-  appStickyNotesDateRoute: typeof appStickyNotesDateRoute
-  appStickyNotesIndexRoute: typeof appStickyNotesIndexRoute
+  appStickyNotesDateRoute: typeof appStickyNotesDateRoute;
+  appStickyNotesIndexRoute: typeof appStickyNotesIndexRoute;
 }
 
 const appStickyNotesRouteRouteChildren: appStickyNotesRouteRouteChildren = {
   appStickyNotesDateRoute: appStickyNotesDateRoute,
   appStickyNotesIndexRoute: appStickyNotesIndexRoute,
-}
+};
 
 const appStickyNotesRouteRouteWithChildren =
-  appStickyNotesRouteRoute._addFileChildren(appStickyNotesRouteRouteChildren)
+  appStickyNotesRouteRoute._addFileChildren(appStickyNotesRouteRouteChildren);
 
 interface appRouteRouteChildren {
-  appStickyNotesRouteRoute: typeof appStickyNotesRouteRouteWithChildren
-  appImageEditorRoute: typeof appImageEditorRoute
-  appIndexRoute: typeof appIndexRoute
+  appStickyNotesRouteRoute: typeof appStickyNotesRouteRouteWithChildren;
+  appImageEditorRoute: typeof appImageEditorRoute;
+  appIndexRoute: typeof appIndexRoute;
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
   appStickyNotesRouteRoute: appStickyNotesRouteRouteWithChildren,
   appImageEditorRoute: appImageEditorRoute,
   appIndexRoute: appIndexRoute,
-}
+};
 
 const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
-  appRouteRouteChildren,
-)
+  appRouteRouteChildren
+);
 
 const rootRouteChildren: RootRouteChildren = {
   appRouteRoute: appRouteRouteWithChildren,
   authLoginRoute: authLoginRoute,
   ApiSplatRoute: ApiSplatRoute,
-}
+};
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
 
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
 declare module '@tanstack/react-start' {
   interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
+    ssr: true;
+    router: Awaited<ReturnType<typeof getRouter>>;
   }
 }

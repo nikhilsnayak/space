@@ -1,7 +1,6 @@
-import { createLink } from '@tanstack/react-router';
+import { createLink, LinkComponent } from '@tanstack/react-router';
 
 import { Button } from './button';
-import type { LinkComponent } from '@tanstack/react-router';
 
 function BaseLinkButton({
   children,

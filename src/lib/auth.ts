@@ -2,7 +2,7 @@ import { redirect } from '@tanstack/react-router';
 import { createMiddleware } from '@tanstack/react-start';
 import { getCookie } from '@tanstack/react-start/server';
 import { Elysia } from 'elysia';
-import { SignJWT, jwtVerify } from 'jose';
+import { jwtVerify, SignJWT } from 'jose';
 
 const AUTH_SECRET = new TextEncoder().encode(process.env.AUTH_SECRET);
 const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID!;

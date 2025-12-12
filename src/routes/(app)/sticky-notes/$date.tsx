@@ -7,7 +7,7 @@ import { StickyNotesBoard } from '~/features/sticky-notes/components/sticky-note
 import { findStickyNotesBoardForDate } from '~/features/sticky-notes/queries';
 
 export const Route = createFileRoute('/(app)/sticky-notes/$date')({
-  gcTime: 0,
+  gcTime: 0, // opt out of caching since I have implemented single fight mutation and when the route is re-matched it does SWR which leads to stale content
   loader: async ({ params }) => {
     return await findStickyNotesBoardForDate({ data: params });
   },

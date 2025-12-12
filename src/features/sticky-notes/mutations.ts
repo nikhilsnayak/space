@@ -1,8 +1,9 @@
 import { createServerFn } from '@tanstack/react-start';
 import z from 'zod';
 
-import { NoteSchema, StickyNotesBoard } from './schema';
 import { db } from '~/lib/db';
+
+import { NoteSchema, StickyNotesBoard } from './schema';
 
 export const upsertStickyNotesForDate = createServerFn({ method: 'POST' })
   .inputValidator(

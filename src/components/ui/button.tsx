@@ -1,7 +1,6 @@
-import * as React from 'react';
+import { ComponentProps } from 'react';
 import { Button as BaseButton } from '@base-ui/react/button';
-import { cva } from 'class-variance-authority';
-import type { VariantProps } from 'class-variance-authority';
+import { cva, VariantProps } from 'class-variance-authority';
 
 import { cn } from '~/lib/utils';
 
@@ -42,8 +41,7 @@ function Button({
   variant,
   size,
   ...props
-}: React.ComponentProps<typeof BaseButton> &
-  VariantProps<typeof buttonVariants>) {
+}: ComponentProps<typeof BaseButton> & VariantProps<typeof buttonVariants>) {
   return (
     <BaseButton
       data-slot='button'

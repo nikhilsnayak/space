@@ -3,14 +3,15 @@
 import { startTransition, useActionState, useOptimistic, useRef } from 'react';
 import { AnimatePresence } from 'motion/react';
 
+import { TODAY } from '~/lib/constants';
+import { cn } from '~/lib/utils';
+
 import blackBoardImage from '../assets/black-board.jpg';
 import { upsertStickyNotesForDate } from '../mutations';
+import { Note } from '../schema';
 import { getRandomNoteColor, getRandomNoteRotate } from '../utils';
 import { StickyNotesBoardContext } from './context/sticky-notes-board-context';
 import { StickyNote } from './sticky-note';
-import type { Note } from '../schema';
-import { cn } from '~/lib/utils';
-import { TODAY } from '~/lib/constants';
 
 interface StickyNotesBoardProps {
   date: string;
@@ -26,7 +27,7 @@ async function stickyNotesBoardReducer(
 ) {
   try {
     return upsertStickyNotesForDate({ data: payload });
-  } catch (error) {
+  } catch {
     return prev;
   }
 }
