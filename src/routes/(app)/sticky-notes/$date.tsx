@@ -7,6 +7,7 @@ import { StickyNotesBoard } from '~/features/sticky-notes/components/sticky-note
 import { findStickyNotesBoardForDate } from '~/features/sticky-notes/queries';
 
 export const Route = createFileRoute('/(app)/sticky-notes/$date')({
+  gcTime: 0,
   loader: async ({ params }) => {
     return await findStickyNotesBoardForDate({ data: params });
   },

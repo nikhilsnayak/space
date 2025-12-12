@@ -1,4 +1,3 @@
-// vite.config.ts
 import tailwindcss from '@tailwindcss/vite';
 import { tanstackStart } from '@tanstack/react-start/plugin/vite';
 import viteReact from '@vitejs/plugin-react';
@@ -16,6 +15,10 @@ export default defineConfig({
     tailwindcss(),
     tanstackStart(),
     nitro({ preset: 'vercel' }),
-    viteReact(),
+    viteReact({
+      babel: {
+        plugins: ['babel-plugin-react-compiler'],
+      },
+    }),
   ],
 });

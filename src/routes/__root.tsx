@@ -1,10 +1,8 @@
 /// <reference types="vite/client" />
-import {
-  HeadContent,
-  Outlet,
-  Scripts,
-  createRootRoute,
-} from '@tanstack/react-router';
+import { PropsWithChildren } from 'react';
+import { TanStackDevtools } from '@tanstack/react-devtools';
+import { createRootRoute, HeadContent, Scripts } from '@tanstack/react-router';
+import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
 
 import globalCss from '../globals.css?url';
 
@@ -29,10 +27,10 @@ export const Route = createRootRoute({
       },
     ],
   }),
-  component: Root,
+  shellComponent: Shell,
 });
 
-function Root() {
+function Shell({ children }: PropsWithChildren) {
   return (
     <html lang='en' className='dark'>
       <head>
@@ -40,9 +38,20 @@ function Root() {
       </head>
       <body>
         {/* https://base-ui.com/react/overview/quick-start#set-up */}
-        <div id='root'>
-          <Outlet />
-        </div>
+        <div id='root'>{children}</div>
+        {import.meta.env.DEV ? (
+          <TanStackDevtools
+            config={{
+              position: 'bottom-right',
+            }}
+            plugins={[
+              {
+                name: 'Tanstack Router',
+                render: <TanStackRouterDevtoolsPanel />,
+              },
+            ]}
+          />
+        ) : null}
         <Scripts />
       </body>
     </html>
