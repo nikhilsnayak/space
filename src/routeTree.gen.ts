@@ -18,8 +18,9 @@ import { Route as appRouteRouteImport } from './routes/(app)/route';
 import { Route as appStickyNotesDateRouteImport } from './routes/(app)/sticky-notes/$date';
 import { Route as appStickyNotesIndexRouteImport } from './routes/(app)/sticky-notes/index';
 import { Route as appStickyNotesRouteRouteImport } from './routes/(app)/sticky-notes/route';
+import { Route as authApiAuthCallbackGithubRouteImport } from './routes/(auth)/api.auth.callback.github';
+import { Route as authApiAuthLoginRouteImport } from './routes/(auth)/api.auth.login';
 import { Route as authLoginRouteImport } from './routes/(auth)/login';
-import { Route as ApiSplatRouteImport } from './routes/api.$';
 
 const appRouteRoute = appRouteRouteImport.update({
   id: '/(app)',
@@ -29,11 +30,6 @@ const appIndexRoute = appIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => appRouteRoute,
-} as any);
-const ApiSplatRoute = ApiSplatRouteImport.update({
-  id: '/api/$',
-  path: '/api/$',
-  getParentRoute: () => rootRouteImport,
 } as any);
 const authLoginRoute = authLoginRouteImport.update({
   id: '/(auth)/login',
@@ -60,23 +56,36 @@ const appStickyNotesDateRoute = appStickyNotesDateRouteImport.update({
   path: '/$date',
   getParentRoute: () => appStickyNotesRouteRoute,
 } as any);
+const authApiAuthLoginRoute = authApiAuthLoginRouteImport.update({
+  id: '/(auth)/api/auth/login',
+  path: '/api/auth/login',
+  getParentRoute: () => rootRouteImport,
+} as any);
+const authApiAuthCallbackGithubRoute =
+  authApiAuthCallbackGithubRouteImport.update({
+    id: '/(auth)/api/auth/callback/github',
+    path: '/api/auth/callback/github',
+    getParentRoute: () => rootRouteImport,
+  } as any);
 
 export interface FileRoutesByFullPath {
   '/sticky-notes': typeof appStickyNotesRouteRouteWithChildren;
   '/image-editor': typeof appImageEditorRoute;
   '/login': typeof authLoginRoute;
-  '/api/$': typeof ApiSplatRoute;
   '/': typeof appIndexRoute;
   '/sticky-notes/$date': typeof appStickyNotesDateRoute;
   '/sticky-notes/': typeof appStickyNotesIndexRoute;
+  '/api/auth/login': typeof authApiAuthLoginRoute;
+  '/api/auth/callback/github': typeof authApiAuthCallbackGithubRoute;
 }
 export interface FileRoutesByTo {
   '/image-editor': typeof appImageEditorRoute;
   '/login': typeof authLoginRoute;
-  '/api/$': typeof ApiSplatRoute;
   '/': typeof appIndexRoute;
   '/sticky-notes/$date': typeof appStickyNotesDateRoute;
   '/sticky-notes': typeof appStickyNotesIndexRoute;
+  '/api/auth/login': typeof authApiAuthLoginRoute;
+  '/api/auth/callback/github': typeof authApiAuthCallbackGithubRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
@@ -84,10 +93,11 @@ export interface FileRoutesById {
   '/(app)/sticky-notes': typeof appStickyNotesRouteRouteWithChildren;
   '/(app)/image-editor': typeof appImageEditorRoute;
   '/(auth)/login': typeof authLoginRoute;
-  '/api/$': typeof ApiSplatRoute;
   '/(app)/': typeof appIndexRoute;
   '/(app)/sticky-notes/$date': typeof appStickyNotesDateRoute;
   '/(app)/sticky-notes/': typeof appStickyNotesIndexRoute;
+  '/(auth)/api/auth/login': typeof authApiAuthLoginRoute;
+  '/(auth)/api/auth/callback/github': typeof authApiAuthCallbackGithubRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
@@ -95,34 +105,38 @@ export interface FileRouteTypes {
     | '/sticky-notes'
     | '/image-editor'
     | '/login'
-    | '/api/$'
     | '/'
     | '/sticky-notes/$date'
-    | '/sticky-notes/';
+    | '/sticky-notes/'
+    | '/api/auth/login'
+    | '/api/auth/callback/github';
   fileRoutesByTo: FileRoutesByTo;
   to:
     | '/image-editor'
     | '/login'
-    | '/api/$'
     | '/'
     | '/sticky-notes/$date'
-    | '/sticky-notes';
+    | '/sticky-notes'
+    | '/api/auth/login'
+    | '/api/auth/callback/github';
   id:
     | '__root__'
     | '/(app)'
     | '/(app)/sticky-notes'
     | '/(app)/image-editor'
     | '/(auth)/login'
-    | '/api/$'
     | '/(app)/'
     | '/(app)/sticky-notes/$date'
-    | '/(app)/sticky-notes/';
+    | '/(app)/sticky-notes/'
+    | '/(auth)/api/auth/login'
+    | '/(auth)/api/auth/callback/github';
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
   appRouteRoute: typeof appRouteRouteWithChildren;
   authLoginRoute: typeof authLoginRoute;
-  ApiSplatRoute: typeof ApiSplatRoute;
+  authApiAuthLoginRoute: typeof authApiAuthLoginRoute;
+  authApiAuthCallbackGithubRoute: typeof authApiAuthCallbackGithubRoute;
 }
 
 declare module '@tanstack/react-router' {
@@ -140,13 +154,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/';
       preLoaderRoute: typeof appIndexRouteImport;
       parentRoute: typeof appRouteRoute;
-    };
-    '/api/$': {
-      id: '/api/$';
-      path: '/api/$';
-      fullPath: '/api/$';
-      preLoaderRoute: typeof ApiSplatRouteImport;
-      parentRoute: typeof rootRouteImport;
     };
     '/(auth)/login': {
       id: '/(auth)/login';
@@ -183,6 +190,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appStickyNotesDateRouteImport;
       parentRoute: typeof appStickyNotesRouteRoute;
     };
+    '/(auth)/api/auth/login': {
+      id: '/(auth)/api/auth/login';
+      path: '/api/auth/login';
+      fullPath: '/api/auth/login';
+      preLoaderRoute: typeof authApiAuthLoginRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    '/(auth)/api/auth/callback/github': {
+      id: '/(auth)/api/auth/callback/github';
+      path: '/api/auth/callback/github';
+      fullPath: '/api/auth/callback/github';
+      preLoaderRoute: typeof authApiAuthCallbackGithubRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
   }
 }
 
@@ -218,7 +239,8 @@ const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   appRouteRoute: appRouteRouteWithChildren,
   authLoginRoute: authLoginRoute,
-  ApiSplatRoute: ApiSplatRoute,
+  authApiAuthLoginRoute: authApiAuthLoginRoute,
+  authApiAuthCallbackGithubRoute: authApiAuthCallbackGithubRoute,
 };
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -30,7 +30,7 @@ function Login() {
         {errorMessage && <p className='text-destructive'>{errorMessage}</p>}
         <Button
           nativeButton={false}
-          render={<a href='/api/auth/sign-in'>Login</a>}
+          render={<a href='/api/auth/login'>Login</a>}
         />
       </div>
     </section>

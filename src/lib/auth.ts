@@ -1,23 +1,16 @@
 import { redirect } from '@tanstack/react-router';
 import { createMiddleware } from '@tanstack/react-start';
-import { getCookie } from '@tanstack/react-start/server';
-import { Elysia } from 'elysia';
+import {
+  deleteCookie,
+  getCookie,
+  setCookie,
+} from '@tanstack/react-start/server';
 import { jwtVerify, SignJWT } from 'jose';
 
 const AUTH_SECRET = new TextEncoder().encode(process.env.AUTH_SECRET);
 const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID!;
 const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET!;
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL!;
-
-function getGithubAuthUrl(redirectUri: string) {
-  const state = crypto.randomUUID();
-  const url = new URL('https://github.com/login/oauth/authorize');
-  url.searchParams.set('client_id', GITHUB_CLIENT_ID);
-  url.searchParams.set('redirect_uri', redirectUri);
-  url.searchParams.set('state', state);
-  url.searchParams.set('scope', 'read:user user:email');
-  return url;
-}
 
 async function exchangeGithubCodeForToken(code: string, redirectUri: string) {
   const response = await fetch('https://github.com/login/oauth/access_token', {
@@ -84,62 +77,73 @@ export async function getSession(): Promise<{ email: string } | null> {
   }
 }
 
-export const authController = new Elysia({ prefix: '/auth' })
-  .get('/sign-in', (ctx) => {
-    const { origin } = new URL(ctx.request.url);
-    const redirectUri = `${origin}/api/auth/callback/github`;
+export function handleLogin({ request }: { request: Request }) {
+  const { origin } = new URL(request.url);
+  const redirectUri = `${origin}/api/auth/callback/github`;
 
-    const githubAuthUrl = getGithubAuthUrl(redirectUri);
-    const state = githubAuthUrl.searchParams.get('state')!;
+  const state = crypto.randomUUID();
+  const githubAuthUrl = new URL('https://github.com/login/oauth/authorize');
 
-    ctx.cookie['oauth_state'].set({
-      value: state,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 10,
-    });
+  githubAuthUrl.searchParams.set('client_id', GITHUB_CLIENT_ID);
+  githubAuthUrl.searchParams.set('redirect_uri', redirectUri);
+  githubAuthUrl.searchParams.set('state', state);
+  githubAuthUrl.searchParams.set('scope', 'read:user user:email');
 
-    return ctx.redirect(githubAuthUrl.toString());
-  })
-  .get('/callback/github', async (ctx) => {
-    const { code, state, error } = ctx.query;
-
-    if (error) {
-      return ctx.redirect(`/login?error=${encodeURIComponent(error)}`);
-    }
-
-    if (!code || !state) {
-      return ctx.redirect('/login?error=missing_parameters');
-    }
-
-    const storedState = ctx.cookie['oauth_state'].value;
-    if (!storedState || storedState !== state) {
-      return ctx.redirect('/login?error=invalid_state');
-    }
-    const { origin } = new URL(ctx.request.url);
-    const redirectUri = `${origin}/api/auth/callback/github`;
-
-    const tokenData = await exchangeGithubCodeForToken(code, redirectUri);
-    const userData = await getGithubUser(tokenData.access_token);
-
-    if (!isAdmin(userData.email)) {
-      return ctx.redirect('/login?error=not_authorized');
-    }
-
-    const sessionToken = await createSessionToken({ email: userData.email });
-
-    ctx.cookie['oauth_state'].remove();
-    ctx.cookie['session'].set({
-      value: sessionToken,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-    });
-
-    return ctx.redirect('/');
+  setCookie('oauth_state', state, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 60 * 10,
   });
+
+  return redirect({ href: githubAuthUrl.toString() });
+}
+
+export async function handleGithubCallback({ request }: { request: Request }) {
+  const { searchParams, origin } = new URL(request.url);
+
+  const code = searchParams.get('code');
+  const state = searchParams.get('state');
+  const error = searchParams.get('error');
+
+  function redirectToLogin(error: string) {
+    deleteCookie('oauth_state');
+    return redirect({ to: '/login', search: { error } });
+  }
+
+  if (error) {
+    return redirectToLogin(error);
+  }
+
+  if (!code || !state) {
+    return redirectToLogin('missing_parameters');
+  }
+
+  const storedState = getCookie('oauth_state');
+  if (!storedState || storedState !== state) {
+    return redirectToLogin('invalid_state');
+  }
+
+  const redirectUri = `${origin}/api/auth/callback/github`;
+
+  const tokenData = await exchangeGithubCodeForToken(code, redirectUri);
+  const userData = await getGithubUser(tokenData.access_token);
+
+  if (!isAdmin(userData.email)) {
+    return redirectToLogin('not_authorized');
+  }
+
+  const sessionToken = await createSessionToken({ email: userData.email });
+  deleteCookie('oauth_state');
+  setCookie('session', sessionToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 60 * 60 * 24 * 7, // 7 days
+  });
+
+  return redirect({ to: '/' });
+}
 
 export const authMiddleware = createMiddleware().server(async ({ next }) => {
   const session = await getSession();
