@@ -1,10 +1,10 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router';
 
-import { authMiddleware } from '~/lib/auth';
+import { authRequestMiddleware } from '~/lib/auth/middlewares';
 
 export const Route = createFileRoute('/(app)')({
   server: {
-    middleware: [authMiddleware],
+    middleware: [authRequestMiddleware],
   },
   component: Outlet,
 });

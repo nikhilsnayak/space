@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import z from 'zod';
 
-import { loginMiddleware } from '~/lib/auth';
+import { loginMiddleware } from '~/lib/auth/middlewares';
 import { Button } from '~/components/ui/button';
 
 export const Route = createFileRoute('/(auth)/login')({

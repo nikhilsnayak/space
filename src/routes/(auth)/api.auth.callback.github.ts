@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-import { handleGithubCallback } from '~/lib/auth';
+import { handleGithubCallback } from '~/lib/auth/handlers';
 
 export const Route = createFileRoute('/(auth)/api/auth/callback/github')({
   server: {
