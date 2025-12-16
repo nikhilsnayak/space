@@ -18,7 +18,7 @@ export function ImageEditor() {
       <canvas
         ref={canvasRef}
         className='border-2 shadow'
-        width={800}
+        width={1600}
         height={800}
       />
     </div>

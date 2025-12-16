@@ -7,4 +7,5 @@ export const db = drizzle(process.env.DATABASE_URL!, {
   schema,
   relations,
   casing: 'snake_case',
+  logger: process.env.NODE_ENV !== 'production',
 });
