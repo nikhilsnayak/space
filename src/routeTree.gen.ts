@@ -15,7 +15,9 @@ import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as appImageEditorRouteImport } from './routes/(app)/image-editor'
 import { Route as appStickyNotesRouteRouteImport } from './routes/(app)/sticky-notes/route'
 import { Route as appStickyNotesIndexRouteImport } from './routes/(app)/sticky-notes/index'
+import { Route as appDocsIndexRouteImport } from './routes/(app)/docs/index'
 import { Route as appStickyNotesDateRouteImport } from './routes/(app)/sticky-notes/$date'
+import { Route as appDocsIdRouteImport } from './routes/(app)/docs/$id'
 import { Route as authApiAuthLoginRouteImport } from './routes/(auth)/api.auth.login'
 import { Route as authApiAuthCallbackGithubRouteImport } from './routes/(auth)/api.auth.callback.github'
 
@@ -48,10 +50,20 @@ const appStickyNotesIndexRoute = appStickyNotesIndexRouteImport.update({
   path: '/',
   getParentRoute: () => appStickyNotesRouteRoute,
 } as any)
+const appDocsIndexRoute = appDocsIndexRouteImport.update({
+  id: '/docs/',
+  path: '/docs/',
+  getParentRoute: () => appRouteRoute,
+} as any)
 const appStickyNotesDateRoute = appStickyNotesDateRouteImport.update({
   id: '/$date',
   path: '/$date',
   getParentRoute: () => appStickyNotesRouteRoute,
+} as any)
+const appDocsIdRoute = appDocsIdRouteImport.update({
+  id: '/docs/$id',
+  path: '/docs/$id',
+  getParentRoute: () => appRouteRoute,
 } as any)
 const authApiAuthLoginRoute = authApiAuthLoginRouteImport.update({
   id: '/(auth)/api/auth/login',
@@ -70,7 +82,9 @@ export interface FileRoutesByFullPath {
   '/image-editor': typeof appImageEditorRoute
   '/login': typeof authLoginRoute
   '/': typeof appIndexRoute
+  '/docs/$id': typeof appDocsIdRoute
   '/sticky-notes/$date': typeof appStickyNotesDateRoute
+  '/docs': typeof appDocsIndexRoute
   '/sticky-notes/': typeof appStickyNotesIndexRoute
   '/api/auth/login': typeof authApiAuthLoginRoute
   '/api/auth/callback/github': typeof authApiAuthCallbackGithubRoute
@@ -79,7 +93,9 @@ export interface FileRoutesByTo {
   '/image-editor': typeof appImageEditorRoute
   '/login': typeof authLoginRoute
   '/': typeof appIndexRoute
+  '/docs/$id': typeof appDocsIdRoute
   '/sticky-notes/$date': typeof appStickyNotesDateRoute
+  '/docs': typeof appDocsIndexRoute
   '/sticky-notes': typeof appStickyNotesIndexRoute
   '/api/auth/login': typeof authApiAuthLoginRoute
   '/api/auth/callback/github': typeof authApiAuthCallbackGithubRoute
@@ -91,7 +107,9 @@ export interface FileRoutesById {
   '/(app)/image-editor': typeof appImageEditorRoute
   '/(auth)/login': typeof authLoginRoute
   '/(app)/': typeof appIndexRoute
+  '/(app)/docs/$id': typeof appDocsIdRoute
   '/(app)/sticky-notes/$date': typeof appStickyNotesDateRoute
+  '/(app)/docs/': typeof appDocsIndexRoute
   '/(app)/sticky-notes/': typeof appStickyNotesIndexRoute
   '/(auth)/api/auth/login': typeof authApiAuthLoginRoute
   '/(auth)/api/auth/callback/github': typeof authApiAuthCallbackGithubRoute
@@ -103,7 +121,9 @@ export interface FileRouteTypes {
     | '/image-editor'
     | '/login'
     | '/'
+    | '/docs/$id'
     | '/sticky-notes/$date'
+    | '/docs'
     | '/sticky-notes/'
     | '/api/auth/login'
     | '/api/auth/callback/github'
@@ -112,7 +132,9 @@ export interface FileRouteTypes {
     | '/image-editor'
     | '/login'
     | '/'
+    | '/docs/$id'
     | '/sticky-notes/$date'
+    | '/docs'
     | '/sticky-notes'
     | '/api/auth/login'
     | '/api/auth/callback/github'
@@ -123,7 +145,9 @@ export interface FileRouteTypes {
     | '/(app)/image-editor'
     | '/(auth)/login'
     | '/(app)/'
+    | '/(app)/docs/$id'
     | '/(app)/sticky-notes/$date'
+    | '/(app)/docs/'
     | '/(app)/sticky-notes/'
     | '/(auth)/api/auth/login'
     | '/(auth)/api/auth/callback/github'
@@ -180,12 +204,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appStickyNotesIndexRouteImport
       parentRoute: typeof appStickyNotesRouteRoute
     }
+    '/(app)/docs/': {
+      id: '/(app)/docs/'
+      path: '/docs'
+      fullPath: '/docs'
+      preLoaderRoute: typeof appDocsIndexRouteImport
+      parentRoute: typeof appRouteRoute
+    }
     '/(app)/sticky-notes/$date': {
       id: '/(app)/sticky-notes/$date'
       path: '/$date'
       fullPath: '/sticky-notes/$date'
       preLoaderRoute: typeof appStickyNotesDateRouteImport
       parentRoute: typeof appStickyNotesRouteRoute
+    }
+    '/(app)/docs/$id': {
+      id: '/(app)/docs/$id'
+      path: '/docs/$id'
+      fullPath: '/docs/$id'
+      preLoaderRoute: typeof appDocsIdRouteImport
+      parentRoute: typeof appRouteRoute
     }
     '/(auth)/api/auth/login': {
       id: '/(auth)/api/auth/login'
@@ -221,12 +259,16 @@ interface appRouteRouteChildren {
   appStickyNotesRouteRoute: typeof appStickyNotesRouteRouteWithChildren
   appImageEditorRoute: typeof appImageEditorRoute
   appIndexRoute: typeof appIndexRoute
+  appDocsIdRoute: typeof appDocsIdRoute
+  appDocsIndexRoute: typeof appDocsIndexRoute
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
   appStickyNotesRouteRoute: appStickyNotesRouteRouteWithChildren,
   appImageEditorRoute: appImageEditorRoute,
   appIndexRoute: appIndexRoute,
+  appDocsIdRoute: appDocsIdRoute,
+  appDocsIndexRoute: appDocsIndexRoute,
 }
 
 const appRouteRouteWithChildren = appRouteRoute._addFileChildren(

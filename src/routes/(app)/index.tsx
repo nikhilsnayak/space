@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { ImageIcon, StickyNoteIcon } from 'lucide-react';
+import { FileTextIcon, ImageIcon, StickyNoteIcon } from 'lucide-react';
 
 export const Route = createFileRoute('/(app)/')({
   component: HomePage,
@@ -21,6 +21,13 @@ function HomePage() {
       >
         <ImageIcon />
         <h2>Image Editor</h2>
+      </Link>
+      <Link
+        to='/docs'
+        className='bg-card text-card-foreground grid aspect-square w-40 place-items-center border p-4 shadow-sm'
+      >
+        <FileTextIcon />
+        <h2>Docs</h2>
       </Link>
     </section>
   );
