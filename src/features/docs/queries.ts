@@ -3,12 +3,14 @@ import z from 'zod';
 
 import { db } from '~/lib/db';
 
-export const getRecentlyOpenedDocuments = createServerFn().handler(async () => {
-  return await db.query.Document.findMany({
-    orderBy: { updatedAt: 'desc' },
-    limit: 10,
-  });
-});
+export const getRecentlyUpdatedDocuments = createServerFn().handler(
+  async () => {
+    return await db.query.Document.findMany({
+      orderBy: { updatedAt: 'desc' },
+      limit: 10,
+    });
+  }
+);
 
 export const findDocument = createServerFn()
   .inputValidator(z.object({ id: z.uuid() }))

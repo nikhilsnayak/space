@@ -2,12 +2,12 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import { formatDistanceToNow } from 'date-fns';
 import { FileTextIcon, PlusIcon } from 'lucide-react';
 
-import { getRecentlyOpenedDocuments } from '~/features/docs/queries';
+import { getRecentlyUpdatedDocuments } from '~/features/docs/queries';
 
 export const Route = createFileRoute('/(app)/docs/')({
   gcTime: 0,
   loader: async () => {
-    return await getRecentlyOpenedDocuments();
+    return await getRecentlyUpdatedDocuments();
   },
   component: DocsIndexPage,
 });
@@ -55,7 +55,7 @@ function DocsIndexPage() {
                 >
                   <span className='text-sm font-medium'>{document.name}</span>
                   <span className='text-xs text-muted-foreground'>
-                    {`Opened ${formatDistanceToNow(new Date(document.updatedAt))} ago`}
+                    {`Last updated ${formatDistanceToNow(new Date(document.updatedAt))} ago`}
                   </span>
                 </Link>
               </li>
