@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { formatDistanceToNow } from 'date-fns';
-import { FileTextIcon, PlusIcon } from 'lucide-react';
+import { FileTextIcon, HomeIcon, PlusIcon } from 'lucide-react';
 
+import { LinkButton } from '~/components/ui/link-button';
 import { getRecentlyUpdatedDocuments } from '~/features/docs/queries';
 
 export const Route = createFileRoute('/(app)/docs/')({
@@ -17,11 +18,14 @@ function DocsIndexPage() {
 
   return (
     <section>
-      <header className='p-4 sticky top-0 backdrop-blur-sm shadow-sm border-b'>
+      <header className='flex w-full items-center justify-between border-b p-4 backdrop-blur-sm sticky top-0'>
         <h1 className='flex items-center gap-2 text-2xl'>
           <FileTextIcon />
           <span>Docs</span>
         </h1>
+        <LinkButton to='/' size='icon-sm' variant='outline'>
+          <HomeIcon />
+        </LinkButton>
       </header>
       <div className='bg-accent text-accent-foreground'>
         <div className='max-w-(--breakpoint-lg) py-6 mx-auto space-y-3'>

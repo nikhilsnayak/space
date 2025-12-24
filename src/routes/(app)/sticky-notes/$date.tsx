@@ -20,7 +20,7 @@ function StickyNotesBoardPage() {
 
   return (
     <div className='grid h-full grid-rows-[auto_1fr]'>
-      <div className='flex w-full items-center justify-between border-b p-4 backdrop-blur-sm'>
+      <header className='flex w-full items-center justify-between border-b p-4 backdrop-blur-sm'>
         <h2 className='text-2xl font-medium'>
           {isToday(date)
             ? `Today - ${format(date, 'dd MMM')}`
@@ -29,7 +29,7 @@ function StickyNotesBoardPage() {
         <LinkButton to='/' size='icon-sm' variant='outline'>
           <HomeIcon />
         </LinkButton>
-      </div>
+      </header>
       <StickyNotesBoard key={date} date={date} notes={notes} />
     </div>
   );
