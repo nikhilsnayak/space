@@ -1,7 +1,6 @@
 import { useRef, useTransition } from 'react';
 import { CodeHighlighterShikiExtension } from '@lexical/code-shiki';
 import {
-  AutoFocusExtension,
   HorizontalRuleExtension,
   TabIndentationExtension,
 } from '@lexical/extension';
@@ -106,7 +105,6 @@ export function DocEditor({ id, content }: DocEditorProps) {
       LinkExtension,
       HistoryExtension,
       RichTextExtension,
-      AutoFocusExtension,
       TabIndentationExtension,
       HorizontalRuleExtension,
       CodeHighlighterShikiExtension,

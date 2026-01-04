@@ -19,7 +19,7 @@ function DocPage() {
 
   return (
     <section className='grid gap-4 grid-rows-[auto_1fr] w-full h-full'>
-      <header className='p-4 sticky top-0  backdrop-blur-sm shadow-sm border-b'>
+      <header className='p-4 shadow-sm border-b'>
         <h1 className='flex items-center gap-2 text-2xl'>
           <FileTextIcon />
           <DocName id={id} name={document?.name} />

@@ -48,24 +48,24 @@ function DocsIndexPage() {
       </div>
       <div className='max-w-(--breakpoint-lg) py-6 mx-auto space-y-3'>
         <h2>Recently opened</h2>
-        <div>
-          <ul>
-            {recentlyOpenedDocuments.map((document) => (
-              <li key={document.id}>
-                <Link
-                  to='/docs/$id'
-                  className='w-40 aspect-3/4 border p-4 flex flex-col justify-between'
-                  params={{ id: document.id }}
-                >
-                  <span className='text-sm font-medium'>{document.name}</span>
-                  <span className='text-xs text-muted-foreground'>
-                    {`Last updated ${formatDistanceToNow(new Date(document.updatedAt))} ago`}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <ul className='flex flex-wrap gap-4'>
+          {recentlyOpenedDocuments.map((document) => (
+            <li key={document.id} className='w-40 aspect-3/4 border p-4'>
+              <Link
+                to='/docs/$id'
+                className='size-full flex flex-col justify-between'
+                params={{ id: document.id }}
+              >
+                <span className='text-sm font-medium'>
+                  {document.name || 'Untitled Doc'}
+                </span>
+                <span className='text-xs text-muted-foreground'>
+                  {`Last updated ${formatDistanceToNow(new Date(document.updatedAt))} ago`}
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );
