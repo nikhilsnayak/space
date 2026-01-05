@@ -56,7 +56,7 @@ function DocsIndexPage() {
                 className='size-full flex flex-col justify-between'
                 params={{ id: document.id }}
               >
-                <span className='text-sm font-medium'>
+                <span className='text-sm font-medium overflow-hidden text-ellipsis block'>
                   {document.name || 'Untitled Doc'}
                 </span>
                 <span className='text-xs text-muted-foreground'>
