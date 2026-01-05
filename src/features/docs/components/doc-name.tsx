@@ -23,7 +23,7 @@ export function DocName(props: { id: string; name?: string | null }) {
       <input
         name='name'
         defaultValue={name || 'Untitled Doc'}
-        className='px-2 py-1 rounded-none'
+        className='px-2 py-1 rounded-none field-sizing-content max-w-3xl text-ellipsis'
         spellCheck={false}
         autoComplete='off'
         onBlur={() => {
