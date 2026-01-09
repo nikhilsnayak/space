@@ -1,3 +1,5 @@
+import 'server-only';
+
 import { drizzle } from 'drizzle-orm/bun-sql';
 
 import { relations } from './relations';

@@ -1,22 +1,16 @@
-import { createFileRoute } from '@tanstack/react-router';
-import z from 'zod';
+import { redirect } from 'next/navigation';
 
-import { loginMiddleware } from '~/lib/auth/middlewares';
+import { getSession } from '~/lib/auth';
 import { Button } from '~/components/ui/button';
 
-export const Route = createFileRoute('/(auth)/login')({
-  server: {
-    middleware: [loginMiddleware],
-  },
-  validateSearch: z.object({
-    error: z.string().optional(),
-  }),
-  component: Login,
-});
+export default async function LoginPage({ searchParams }: PageProps<'/login'>) {
+  const session = await getSession();
 
-function Login() {
-  const { error } = Route.useSearch();
+  if (session) {
+    redirect('/');
+  }
 
+  const { error } = await searchParams;
   let errorMessage = '';
   if (error === 'not_authorized') {
     errorMessage = 'You are not authorized to access this application.';

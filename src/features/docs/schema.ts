@@ -1,10 +1,10 @@
 import { jsonb, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import type { SerializedEditorState } from 'lexical';
 
 export const Document = pgTable('documents', {
   id: text().primaryKey(),
   name: text(),
-  // eslint-disable-next-line
-  content: jsonb().$type<any>(),
+  content: jsonb().$type<SerializedEditorState>(),
   createdAt: timestamp({ mode: 'string', withTimezone: true })
     .defaultNow()
     .notNull(),

@@ -1,3 +1,5 @@
+'use client';
+
 import { useActionState, useRef } from 'react';
 
 import { upsertDocument } from '../mutations';
@@ -5,17 +7,16 @@ import { upsertDocument } from '../mutations';
 export function DocName(props: { id: string; name?: string | null }) {
   const formRef = useRef<HTMLFormElement>(null);
   const [name, formAction] = useActionState(
-    async (prev: string, formData: FormData) => {
+    async (prev: string | null, formData: FormData) => {
       try {
-        const name = formData.get('name')?.toString().trim() as string;
-        const result = await upsertDocument({ data: { id: props.id, name } });
-
+        const name = formData.get('name')?.toString().trim();
+        const result = await upsertDocument({ id: props.id, name });
         return result.name;
       } catch {
         return prev;
       }
     },
-    props.name
+    props.name || null
   );
 
   return (
@@ -23,7 +24,7 @@ export function DocName(props: { id: string; name?: string | null }) {
       <input
         name='name'
         defaultValue={name || 'Untitled Doc'}
-        className='px-2 py-1 rounded-none field-sizing-content max-w-3xl text-ellipsis'
+        className='field-sizing-content max-w-3xl rounded-none px-2 py-1 text-ellipsis'
         spellCheck={false}
         autoComplete='off'
         onBlur={() => {

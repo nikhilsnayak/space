@@ -1,3 +1,5 @@
+'use client';
+
 import { startTransition, useActionState, useOptimistic, useRef } from 'react';
 import { AnimatePresence } from 'motion/react';
 
@@ -6,7 +8,7 @@ import { cn } from '~/lib/utils';
 
 import blackBoardImage from '../assets/black-board.jpg';
 import { upsertStickyNotesForDate } from '../mutations';
-import { Note } from '../schema';
+import type { Note } from '../schema';
 import { getRandomNoteColor, getRandomNoteRotate } from '../utils';
 import { StickyNotesBoardContext } from './context/sticky-notes-board-context';
 import { StickyNote } from './sticky-note';
@@ -16,26 +18,18 @@ interface StickyNotesBoardProps {
   notes: Array<Note>;
 }
 
-async function stickyNotesBoardReducer(
-  prev: Array<Note>,
-  payload: {
-    date: string;
-    notes: Array<Note>;
-  }
-) {
-  try {
-    return upsertStickyNotesForDate({ data: payload });
-  } catch {
-    return prev;
-  }
-}
-
 export function StickyNotesBoard({
   date,
   notes: initialNotes,
 }: StickyNotesBoardProps) {
   const [notes, upsertStickyNotesForDateAction] = useActionState(
-    stickyNotesBoardReducer,
+    async (prev: Array<Note>, notes: Array<Note>) => {
+      try {
+        return upsertStickyNotesForDate({ date, notes });
+      } catch {
+        return prev;
+      }
+    },
     initialNotes
   );
   const [optimisticNotes, setOptimisticNotes] = useOptimistic(notes);
@@ -44,10 +38,7 @@ export function StickyNotesBoard({
   const performUpsert = (updatedNotes: Array<Note>) => {
     startTransition(() => {
       setOptimisticNotes(updatedNotes);
-      upsertStickyNotesForDateAction({
-        date,
-        notes: updatedNotes,
-      });
+      upsertStickyNotesForDateAction(updatedNotes);
     });
   };
 

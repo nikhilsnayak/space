@@ -1,3 +1,5 @@
+'use client';
+
 import { useRef, useTransition } from 'react';
 import { CodeHighlighterShikiExtension } from '@lexical/code-shiki';
 import {
@@ -14,9 +16,9 @@ import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { RichTextExtension } from '@lexical/rich-text';
 import {
   defineExtension,
-  EditorState,
-  EditorThemeClasses,
-  SerializedEditorState,
+  type EditorState,
+  type EditorThemeClasses,
+  type SerializedEditorState,
 } from 'lexical';
 
 import { upsertDocument } from '../mutations';
@@ -61,7 +63,7 @@ const placeholderText = 'Start writing...';
 
 interface DocEditorProps {
   id: string;
-  content?: SerializedEditorState;
+  content?: SerializedEditorState | null;
 }
 
 function AutoSavePlugin({ id }: { id: string }) {
@@ -86,7 +88,7 @@ function AutoSavePlugin({ id }: { id: string }) {
           timeoutRef.current = setTimeout(() => {
             const content = editorState.toJSON();
             startSaving(async () => {
-              await upsertDocument({ data: { id, content } });
+              await upsertDocument({ id, content });
             });
           }, 1000);
         }}
@@ -113,7 +115,7 @@ export function DocEditor({ id, content }: DocEditorProps) {
   });
 
   return (
-    <div className='border w-full h-full'>
+    <div className='h-full w-full border'>
       <LexicalExtensionComposer
         extension={editorExtension}
         contentEditable={null}

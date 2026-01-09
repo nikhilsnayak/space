@@ -1,6 +1,6 @@
 import { createContext, use } from 'react';
 
-import { Note } from '../../schema';
+import type { Note } from '../../schema';
 
 export const StickyNotesBoardContext = createContext<{
   ref: React.RefObject<HTMLDivElement | null>;

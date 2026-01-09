@@ -1,10 +1,6 @@
-import { redirect } from '@tanstack/react-router';
-import {
-  deleteCookie,
-  getCookie,
-  setCookie,
-} from '@tanstack/react-start/server';
+import { NextRequest, NextResponse } from 'next/server';
 
+import { getSession } from '.';
 import {
   createSessionToken,
   exchangeGithubCodeForToken,
@@ -12,9 +8,14 @@ import {
   isAdmin,
 } from './utils';
 
-export function handleLogin({ request }: { request: Request }) {
-  const { origin } = new URL(request.url);
-  const redirectUri = `${origin}/api/auth/callback/github`;
+export async function handleLogin(request: NextRequest) {
+  const session = await getSession();
+
+  if (session) {
+    return NextResponse.redirect(new URL('/', request.nextUrl.origin));
+  }
+
+  const redirectUri = `${request.nextUrl.origin}/api/auth/callback/github`;
 
   const state = crypto.randomUUID();
   const githubAuthUrl = new URL('https://github.com/login/oauth/authorize');
@@ -24,26 +25,30 @@ export function handleLogin({ request }: { request: Request }) {
   githubAuthUrl.searchParams.set('state', state);
   githubAuthUrl.searchParams.set('scope', 'read:user user:email');
 
-  setCookie('oauth_state', state, {
+  const response = NextResponse.redirect(githubAuthUrl);
+  response.cookies.set('oauth_state', state, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     maxAge: 60 * 10,
   });
 
-  return redirect({ href: githubAuthUrl.toString() });
+  return response;
 }
 
-export async function handleGithubCallback({ request }: { request: Request }) {
-  const { searchParams, origin } = new URL(request.url);
+export async function handleGithubCallback(request: NextRequest) {
+  const { origin, searchParams } = request.nextUrl;
 
   const code = searchParams.get('code');
   const state = searchParams.get('state');
   const error = searchParams.get('error');
 
   function redirectToLogin(error: string) {
-    deleteCookie('oauth_state');
-    return redirect({ to: '/login', search: { error } });
+    const loginUrl = new URL('/login', origin);
+    loginUrl.searchParams.set('error', error);
+    const response = NextResponse.redirect(loginUrl);
+    response.cookies.delete('oauth_state');
+    return response;
   }
 
   if (error) {
@@ -54,7 +59,7 @@ export async function handleGithubCallback({ request }: { request: Request }) {
     return redirectToLogin('missing_parameters');
   }
 
-  const storedState = getCookie('oauth_state');
+  const storedState = request.cookies.get('oauth_state')?.value;
   if (!storedState || storedState !== state) {
     return redirectToLogin('invalid_state');
   }
@@ -68,14 +73,16 @@ export async function handleGithubCallback({ request }: { request: Request }) {
     return redirectToLogin('not_authorized');
   }
 
+  const response = NextResponse.redirect(new URL('/', origin));
+
   const sessionToken = await createSessionToken({ email: userData.email });
-  deleteCookie('oauth_state');
-  setCookie('session', sessionToken, {
+  response.cookies.delete('oauth_state');
+  response.cookies.set('session', sessionToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     maxAge: 60 * 60 * 24 * 7, // 7 days
   });
 
-  return redirect({ to: '/' });
+  return response;
 }

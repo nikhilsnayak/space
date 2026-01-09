@@ -1,24 +1,18 @@
-import { createLink, LinkComponent } from '@tanstack/react-router';
+import Link from 'next/link';
 
 import { Button } from './button';
 
-function BaseLinkButton({
+export function LinkButton<RouteType>({
   children,
   href,
   ...props
 }: Omit<React.ComponentProps<typeof Button>, 'nativeButton' | 'render'> &
-  React.ComponentProps<'a'>) {
+  React.ComponentProps<typeof Link<RouteType>>) {
   return (
     <Button
       {...props}
       nativeButton={false}
-      render={<a href={href}>{children}</a>}
+      render={<Link href={href}>{children}</Link>}
     />
   );
 }
-
-const CreatedLinkButton = createLink(BaseLinkButton);
-
-export const LinkButton: LinkComponent<typeof CreatedLinkButton> = (props) => {
-  return <CreatedLinkButton {...props} />;
-};

@@ -4,7 +4,7 @@ import { motion, useDragControls } from 'motion/react';
 
 import { Button } from '~/components/ui/button';
 
-import { Note } from '../schema';
+import type { Note } from '../schema';
 import { useStickyNotesBoard } from './context/sticky-notes-board-context';
 
 interface StickyNoteProps {

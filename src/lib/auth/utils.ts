@@ -1,5 +1,7 @@
 import { SignJWT } from 'jose';
 
+import { AUTH_SECRET } from './constants';
+
 export async function exchangeGithubCodeForToken(
   code: string,
   redirectUri: string
@@ -47,7 +49,7 @@ export async function createSessionToken(payload: { email: string }) {
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime('7d')
-    .sign(new TextEncoder().encode(process.env.AUTH_SECRET!));
+    .sign(AUTH_SECRET);
 
   return token;
 }

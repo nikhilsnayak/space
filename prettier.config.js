@@ -6,8 +6,8 @@ const config = {
   jsxSingleQuote: true,
   bracketSpacing: true,
   importOrder: [
-    '^react$',
-    '^@tanstack/(.*)$',
+    '^(react/(.*)$)|^(react$)',
+    '^(next/(.*)$)|^(next$)',
     '<THIRD_PARTY_MODULES>',
     '',
     '^~/lib/(.*)$',
@@ -21,8 +21,8 @@ const config = {
   importOrderParserPlugins: ['typescript', 'jsx', 'decorators-legacy'],
   importOrderTypeScriptVersion: '5.0.0',
   plugins: [
-    'prettier-plugin-tailwindcss',
     '@ianvs/prettier-plugin-sort-imports',
+    'prettier-plugin-tailwindcss',
   ],
 };
 

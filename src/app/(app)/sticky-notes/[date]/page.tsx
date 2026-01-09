@@ -1,4 +1,3 @@
-import { createFileRoute } from '@tanstack/react-router';
 import { format, isToday } from 'date-fns';
 import { HomeIcon } from 'lucide-react';
 
@@ -6,17 +5,11 @@ import { LinkButton } from '~/components/ui/link-button';
 import { StickyNotesBoard } from '~/features/sticky-notes/components/sticky-notes-board';
 import { findStickyNotesBoardForDate } from '~/features/sticky-notes/queries';
 
-export const Route = createFileRoute('/(app)/sticky-notes/$date')({
-  gcTime: 0, // opt out of caching since I have implemented single fight mutation and when the route is re-matched it does SWR which leads to stale content
-  loader: async ({ params }) => {
-    return await findStickyNotesBoardForDate({ data: params });
-  },
-  component: StickyNotesBoardPage,
-});
-
-function StickyNotesBoardPage() {
-  const notes = Route.useLoaderData();
-  const { date } = Route.useParams();
+export default async function StickyNotesBoardPage({
+  params,
+}: PageProps<'/sticky-notes/[date]'>) {
+  const { date } = await params;
+  const notes = await findStickyNotesBoardForDate(date);
 
   return (
     <div className='grid h-full grid-rows-[auto_1fr]'>
@@ -26,7 +19,7 @@ function StickyNotesBoardPage() {
             ? `Today - ${format(date, 'dd MMM')}`
             : format(date, 'EEEE - dd MMM yyyy')}
         </h2>
-        <LinkButton to='/' size='icon-sm' variant='outline'>
+        <LinkButton href='/' size='icon-sm' variant='outline'>
           <HomeIcon />
         </LinkButton>
       </header>

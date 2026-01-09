@@ -1,22 +1,34 @@
-import { createServerFn } from '@tanstack/react-start';
-import z from 'zod';
+import { redirect } from 'next/navigation';
 
+import { getSession } from '~/lib/auth';
 import { db } from '~/lib/db';
 
-export const getRecentlyUpdatedDocuments = createServerFn().handler(
-  async () => {
-    return await db.query.Document.findMany({
-      orderBy: { updatedAt: 'desc' },
-      limit: 10,
-    });
-  }
-);
+export async function getRecentlyUpdatedDocuments() {
+  const session = await getSession();
 
-export const findDocument = createServerFn()
-  .inputValidator(z.object({ id: z.uuid() }))
-  .handler(({ data }) => {
-    const { id } = data;
-    return db.query.Document.findFirst({
-      where: { id },
-    });
+  if (!session) {
+    redirect('/login');
+  }
+
+  return db.query.Document.findMany({
+    orderBy: { updatedAt: 'desc' },
+    limit: 10,
+    columns: {
+      id: true,
+      name: true,
+      updatedAt: true,
+    },
   });
+}
+
+export async function findDocument(id: string) {
+  const session = await getSession();
+
+  if (!session) {
+    redirect('/login');
+  }
+
+  return db.query.Document.findFirst({
+    where: { id },
+  });
+}

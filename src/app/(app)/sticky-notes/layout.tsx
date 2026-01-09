@@ -1,17 +1,10 @@
-import { createFileRoute, Outlet } from '@tanstack/react-router';
-
 import { StickyNotesBoardsList } from '~/features/sticky-notes/components/sticky-notes-boards-list';
 import { getStickyNotesBoards } from '~/features/sticky-notes/queries';
 
-export const Route = createFileRoute('/(app)/sticky-notes')({
-  loader: async () => {
-    return await getStickyNotesBoards();
-  },
-  component: StickyNotesLayout,
-});
-
-function StickyNotesLayout() {
-  const { boards } = Route.useLoaderData();
+export default async function StickyNotesLayout({
+  children,
+}: LayoutProps<'/sticky-notes'>) {
+  const { boards } = await getStickyNotesBoards();
 
   return (
     <section className='grid h-full grid-cols-[240px_1fr]'>
@@ -21,7 +14,7 @@ function StickyNotesLayout() {
         </h1>
         <StickyNotesBoardsList boards={boards} />
       </aside>
-      <Outlet />
+      {children}
     </section>
   );
 }

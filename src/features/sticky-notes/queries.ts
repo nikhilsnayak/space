@@ -1,20 +1,23 @@
-import { createServerFn } from '@tanstack/react-start';
+import { redirect } from 'next/navigation';
 import { sql } from 'drizzle-orm';
-import z from 'zod';
 
+import { getSession } from '~/lib/auth';
 import { db } from '~/lib/db';
 
-export const findStickyNotesBoardForDate = createServerFn()
-  .inputValidator(z.object({ date: z.string() }))
-  .handler(async ({ data }) => {
-    const { date } = data;
-    const row = await db.query.StickyNotesBoard.findFirst({
-      where: { date },
-    });
-    return row?.notes ?? [];
+export async function findStickyNotesBoardForDate(date: string) {
+  const row = await db.query.StickyNotesBoard.findFirst({
+    where: { date },
   });
+  return row?.notes ?? [];
+}
 
-export const getStickyNotesBoards = createServerFn().handler(async () => {
+export async function getStickyNotesBoards() {
+  const session = await getSession();
+
+  if (!session) {
+    redirect('/login');
+  }
+
   const rows = await db.query.StickyNotesBoard.findMany({
     columns: {
       date: true,
@@ -27,8 +30,7 @@ export const getStickyNotesBoards = createServerFn().handler(async () => {
           },
         },
         {
-          RAW: (table_1) =>
-            sql`jsonb_array_length((${table_1.notes})::jsonb) > 0`,
+          RAW: (table) => sql`jsonb_array_length((${table.notes})::jsonb) > 0`,
         },
       ],
     },
@@ -39,4 +41,4 @@ export const getStickyNotesBoards = createServerFn().handler(async () => {
 
   const boards = rows.map((row) => row.date);
   return { boards };
-});
+}
