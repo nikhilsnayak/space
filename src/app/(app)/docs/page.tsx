@@ -24,7 +24,7 @@ export default function DocsIndexPage() {
         <div className='mx-auto max-w-(--breakpoint-lg) space-y-3 py-6'>
           <h2>Start a new document</h2>
           <div>
-            <Link href={`/docs/${crypto.randomUUID()}`} className='space-y-2'>
+            <Link href='/docs/new' className='space-y-2'>
               <div className='bg-primary text-primary-foreground grid aspect-3/4 w-40 place-items-center'>
                 <PlusIcon className='size-20' />
               </div>
@@ -60,9 +60,11 @@ async function RecentlyOpenedDocuments() {
             href={`/docs/${document.id}`}
             className='flex size-full flex-col justify-between'
           >
-            <span className='block overflow-hidden text-sm font-medium text-ellipsis'>
-              {document.name || 'Untitled Doc'}
-            </span>
+            <ViewTransition name={`doc-name-${document.id}`}>
+              <span className='block overflow-hidden text-sm font-medium text-ellipsis'>
+                {document.name || 'Untitled Doc'}
+              </span>
+            </ViewTransition>
             <span className='text-muted-foreground text-xs'>
               {`Last updated ${formatDistanceToNow(document.updatedAt)} ago`}
             </span>

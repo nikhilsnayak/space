@@ -1,6 +1,7 @@
 'use client';
 
-import { useRef, useTransition } from 'react';
+import { useEffect, useRef, useTransition } from 'react';
+import { usePathname } from 'next/navigation';
 import { CodeHighlighterShikiExtension } from '@lexical/code-shiki';
 import {
   HorizontalRuleExtension,
@@ -62,11 +63,10 @@ const theme: EditorThemeClasses = {
 const placeholderText = 'Start writing...';
 
 interface DocEditorProps {
-  id: string;
   content?: SerializedEditorState | null;
 }
 
-function AutoSavePlugin({ id }: { id: string }) {
+function AutoSavePlugin({ id }: { id?: string }) {
   const [isSaving, startSaving] = useTransition();
   const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
@@ -81,6 +81,11 @@ function AutoSavePlugin({ id }: { id: string }) {
         ignoreSelectionChange
         ignoreHistoryMergeTagChange
         onChange={(editorState: EditorState) => {
+          if (!id || id === 'new') {
+            window.alert('No ID found. Please refresh the page and try again.');
+            return;
+          }
+
           if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
           }
@@ -97,7 +102,16 @@ function AutoSavePlugin({ id }: { id: string }) {
   );
 }
 
-export function DocEditor({ id, content }: DocEditorProps) {
+export function DocEditor({ content }: DocEditorProps) {
+  const pathname = usePathname();
+  const id = pathname.split('/').pop();
+
+  useEffect(() => {
+    if (id === 'new') {
+      window.history.replaceState(null, '', `/docs/${crypto.randomUUID()}`);
+    }
+  }, [id]);
+
   const editorExtension = defineExtension({
     theme,
     name: '[root]',
