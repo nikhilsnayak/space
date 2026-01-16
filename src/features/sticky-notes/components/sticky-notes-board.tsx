@@ -87,7 +87,7 @@ export function StickyNotesBoard({
         !editable && 'pointer-events-none'
       )}
       style={{
-        backgroundImage: `url(${blackBoardImage})`,
+        backgroundImage: `url(${blackBoardImage.src})`,
       }}
       onClick={(e) => {
         if (!e.altKey) return;

@@ -10,8 +10,8 @@ export default async function DocPage({ params }: PageProps<'/docs/[id]'>) {
   const document = await findDocument(id);
 
   return (
-    <section className='grid h-full w-full grid-rows-[auto_1fr] gap-4'>
-      <header className='border-b p-4 shadow-sm'>
+    <section className='grid min-h-dvh w-full grid-rows-[auto_1fr] gap-4'>
+      <header className='bg-background/50 sticky top-0 z-10 w-full border-b p-4 shadow-sm backdrop-blur-sm'>
         <h1 className='flex items-center gap-2 text-2xl'>
           <FileTextIcon />
           <DocName id={id} name={document?.name} />

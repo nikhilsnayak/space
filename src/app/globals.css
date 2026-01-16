@@ -155,7 +155,7 @@
   }
 
   #root {
-    @apply isolate h-full;
+    @apply isolate min-h-full;
   }
 }
 
