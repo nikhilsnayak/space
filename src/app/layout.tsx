@@ -1,6 +1,6 @@
 import './globals.css';
 
-import type { PropsWithChildren } from 'react';
+import { ViewTransition, type PropsWithChildren } from 'react';
 import type { Metadata } from 'next';
 import { Geist_Mono } from 'next/font/google';
 
@@ -17,11 +17,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang='en' className='dark'>
-      <body className={cn(geistMono.variable)}>
-        {/* https://base-ui.com/react/overview/quick-start#set-up */}
-        <div id='root'>{children}</div>
-      </body>
-    </html>
+    <ViewTransition>
+      <html lang='en' className='dark'>
+        <body className={cn(geistMono.variable)}>
+          {/* https://base-ui.com/react/overview/quick-start#set-up */}
+          <div id='root'>{children}</div>
+        </body>
+      </html>
+    </ViewTransition>
   );
 }

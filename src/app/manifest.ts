@@ -1,5 +1,5 @@
-import type { MetadataRoute } from 'next'
- 
+import type { MetadataRoute } from 'next';
+
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'Space',
@@ -15,5 +15,5 @@ export default function manifest(): MetadataRoute.Manifest {
         type: 'image/x-icon',
       },
     ],
-  }
+  };
 }

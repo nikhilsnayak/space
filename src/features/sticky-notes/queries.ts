@@ -45,6 +45,5 @@ export async function getStickyNotesBoards() {
     },
   });
 
-  const boards = rows.map((row) => row.date);
-  return { boards };
+  return rows.map((row) => row.date);
 }

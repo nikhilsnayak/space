@@ -6,7 +6,6 @@ import { AnimatePresence } from 'motion/react';
 import { TODAY } from '~/lib/constants';
 import { cn } from '~/lib/utils';
 
-import blackBoardImage from '../assets/black-board.jpg';
 import { upsertStickyNotesForDate } from '../mutations';
 import type { Note } from '../schema';
 import { getRandomNoteColor, getRandomNoteRotate } from '../utils';
@@ -83,12 +82,9 @@ export function StickyNotesBoard({
     <div
       ref={boardRef}
       className={cn(
-        'relative isolate overflow-hidden bg-cover bg-center bg-no-repeat',
+        'relative isolate h-full w-full overflow-hidden',
         !editable && 'pointer-events-none'
       )}
-      style={{
-        backgroundImage: `url(${blackBoardImage.src})`,
-      }}
       onClick={(e) => {
         if (!e.altKey) return;
         const rect = e.currentTarget.getBoundingClientRect();

@@ -26,7 +26,7 @@ export default function StickyNotesLayout({
 }
 
 async function BoardsList() {
-  const { boards } = await getStickyNotesBoards();
+  const boards = await getStickyNotesBoards();
 
   return <StickyNotesBoardsList boards={boards} />;
 }
