@@ -1,21 +1,15 @@
 'use client';
 
 import { useActionState, useRef, ViewTransition } from 'react';
-import { usePathname } from 'next/navigation';
 
+import { useDocumentId } from '../hooks/use-document-id';
 import { upsertDocument } from '../mutations';
 
 export function DocName(props: { name?: string | null }) {
-  const pathname = usePathname();
-  const id = pathname.split('/').pop();
+  const id = useDocumentId();
   const formRef = useRef<HTMLFormElement>(null);
   const [name, formAction] = useActionState(
     async (prev: string | null, formData: FormData) => {
-      if (!id || id === 'new') {
-        window.alert('No ID found. Please refresh the page and try again.');
-        return prev;
-      }
-
       try {
         const name = formData.get('name')?.toString().trim();
         const result = await upsertDocument({ id, name });

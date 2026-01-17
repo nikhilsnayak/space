@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { eq } from 'drizzle-orm';
 import z from 'zod';
 
 import { getSession } from '~/lib/auth';
@@ -52,4 +53,18 @@ export async function upsertDocument(
   revalidatePath('/docs');
 
   return returning;
+}
+
+export async function deleteDocument(id: string) {
+  const session = await getSession();
+
+  if (!session) {
+    redirect('/login');
+  }
+
+  await db.delete(Document).where(eq(Document.id, id));
+
+  revalidatePath('/docs');
+
+  redirect('/docs');
 }

@@ -1,7 +1,12 @@
 'use client';
 
-import { useEffect, useRef, useTransition } from 'react';
-import { usePathname } from 'next/navigation';
+import {
+  startTransition,
+  useEffect,
+  useEffectEvent,
+  useRef,
+  useTransition,
+} from 'react';
 import { CodeHighlighterShikiExtension } from '@lexical/code-shiki';
 import {
   HorizontalRuleExtension,
@@ -22,7 +27,8 @@ import {
   type SerializedEditorState,
 } from 'lexical';
 
-import { upsertDocument } from '../mutations';
+import { useDocumentId } from '../hooks/use-document-id';
+import { deleteDocument, upsertDocument } from '../mutations';
 
 const theme: EditorThemeClasses = {
   ltr: 'ltr',
@@ -66,7 +72,7 @@ interface DocEditorProps {
   content?: SerializedEditorState | null;
 }
 
-function AutoSavePlugin({ id }: { id?: string }) {
+function AutoSavePlugin({ id }: { id: string }) {
   const [isSaving, startSaving] = useTransition();
   const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
@@ -81,11 +87,6 @@ function AutoSavePlugin({ id }: { id?: string }) {
         ignoreSelectionChange
         ignoreHistoryMergeTagChange
         onChange={(editorState: EditorState) => {
-          if (!id || id === 'new') {
-            window.alert('No ID found. Please refresh the page and try again.');
-            return;
-          }
-
           if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
           }
@@ -103,14 +104,33 @@ function AutoSavePlugin({ id }: { id?: string }) {
 }
 
 export function DocEditor({ content }: DocEditorProps) {
-  const pathname = usePathname();
-  const id = pathname.split('/').pop();
+  const id = useDocumentId();
+
+  const onClickCtrlDelete = useEffectEvent(() => {
+    startTransition(async () => {
+      await deleteDocument(id);
+    });
+  });
 
   useEffect(() => {
-    if (id === 'new') {
-      window.history.replaceState(null, '', `/docs/${crypto.randomUUID()}`);
-    }
-  }, [id]);
+    const abortController = new AbortController();
+
+    window.addEventListener(
+      'keydown',
+      (event) => {
+        if (event.key === 'Delete' && event.ctrlKey) {
+          console.log('Delete');
+          event.preventDefault();
+          onClickCtrlDelete();
+        }
+      },
+      { signal: abortController.signal }
+    );
+
+    return () => {
+      abortController.abort();
+    };
+  }, []);
 
   const editorExtension = defineExtension({
     theme,
