@@ -1,5 +1,7 @@
 # Space
 
+A personal software workspace where I build and use the tools I need.
+
 ## Prerequisites
 
 - **Bun** (>1.3.3) - Required as both package manager and runtime

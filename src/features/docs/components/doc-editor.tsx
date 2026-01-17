@@ -117,10 +117,9 @@ export function DocEditor({ content }: DocEditorProps) {
 
     window.addEventListener(
       'keydown',
-      (event) => {
-        if (event.key === 'Delete' && event.ctrlKey) {
-          console.log('Delete');
-          event.preventDefault();
+      (e) => {
+        if (e.key === 'Delete' && e.ctrlKey) {
+          e.preventDefault();
           onClickCtrlDelete();
         }
       },
