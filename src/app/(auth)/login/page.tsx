@@ -19,7 +19,7 @@ export default async function LoginPage({ searchParams }: PageProps<'/login'>) {
   }
 
   return (
-    <section className='grid h-full w-full place-items-center'>
+    <section className='grid h-dvh w-full place-items-center'>
       <div className='space-y-4 text-center'>
         {errorMessage && <p className='text-destructive'>{errorMessage}</p>}
         <Button

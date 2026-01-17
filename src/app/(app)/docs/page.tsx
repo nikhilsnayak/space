@@ -23,12 +23,12 @@ export default function DocsIndexPage() {
       <div className='bg-accent text-accent-foreground'>
         <div className='mx-auto max-w-(--breakpoint-lg) space-y-3 py-6'>
           <h2>Start a new document</h2>
-          <div>
+          <div className='flex'>
             <Link href='/docs/new' className='space-y-2'>
               <div className='bg-primary text-primary-foreground grid aspect-3/4 w-40 place-items-center'>
                 <PlusIcon className='size-20' />
               </div>
-              <p>Blank document</p>
+              <p className='max-w-full text-center'>Blank document</p>
             </Link>
           </div>
         </div>

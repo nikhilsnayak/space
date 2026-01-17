@@ -5,6 +5,12 @@ import { getSession } from '~/lib/auth';
 import { db } from '~/lib/db';
 
 export async function findStickyNotesBoardForDate(date: string) {
+  const session = await getSession();
+
+  if (!session) {
+    redirect('/login');
+  }
+
   const row = await db.query.StickyNotesBoard.findFirst({
     where: { date },
   });
