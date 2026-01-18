@@ -2,27 +2,27 @@
 
 import { useActionState, useRef, ViewTransition } from 'react';
 
-import { useDocumentId } from '../hooks/use-document-id';
+import { toast } from '~/components/ui/toast';
+
 import { upsertDocument } from '../mutations';
 
-export function DocName(props: { name?: string | null }) {
-  const id = useDocumentId();
+export function DocName(props: { name?: string | null; docId: string }) {
   const formRef = useRef<HTMLFormElement>(null);
   const [name, formAction] = useActionState(
     async (prev: string | null, formData: FormData) => {
-      try {
-        const name = formData.get('name')?.toString().trim();
-        const result = await upsertDocument({ id, name });
-        return result.name;
-      } catch {
-        return prev;
-      }
+      const name = formData.get('name')?.toString().trim();
+      const result = await upsertDocument({ id: props.docId, name });
+      toast.add({
+        title: 'Saved',
+        description: 'Document name saved successfully',
+      });
+      return result.name;
     },
     props.name || null
   );
 
   return (
-    <ViewTransition name={`doc-name-${id}`}>
+    <ViewTransition name={`doc-name-${props.docId}`}>
       <form ref={formRef} action={formAction}>
         <input
           name='name'

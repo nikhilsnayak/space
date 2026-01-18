@@ -5,6 +5,7 @@ import { AnimatePresence } from 'motion/react';
 
 import { TODAY } from '~/lib/constants';
 import { cn } from '~/lib/utils';
+import { toast } from '~/components/ui/toast';
 
 import { upsertStickyNotesForDate } from '../mutations';
 import type { Note } from '../schema';
@@ -23,11 +24,12 @@ export function StickyNotesBoard({
 }: StickyNotesBoardProps) {
   const [notes, upsertStickyNotesForDateAction] = useActionState(
     async (prev: Array<Note>, notes: Array<Note>) => {
-      try {
-        return upsertStickyNotesForDate({ date, notes });
-      } catch {
-        return prev;
-      }
+      const result = await upsertStickyNotesForDate({ date, notes });
+      toast.add({
+        title: 'Saved',
+        description: 'Notes saved successfully',
+      });
+      return result;
     },
     initialNotes
   );

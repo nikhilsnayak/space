@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import { Geist_Mono } from 'next/font/google';
 
 import { cn } from '~/lib/utils';
+import { Toaster } from '~/components/ui/toast';
 
 const geistMono = Geist_Mono({
   subsets: ['latin'],
@@ -13,7 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: 'Space',
-  description: 'A personal software workspace where I build and use the tools I need',
+  description:
+    'A personal software workspace where I build and use the tools I need',
 };
 
 export default function RootLayout({ children }: PropsWithChildren) {
@@ -23,6 +25,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
         <body className={cn(geistMono.variable)}>
           {/* https://base-ui.com/react/overview/quick-start#set-up */}
           <div id='root'>{children}</div>
+          <Toaster />
         </body>
       </html>
     </ViewTransition>

@@ -7,6 +7,7 @@ import {
   useRef,
   useTransition,
 } from 'react';
+import { useParams } from 'next/navigation';
 import { CodeHighlighterShikiExtension } from '@lexical/code-shiki';
 import {
   HorizontalRuleExtension,
@@ -27,7 +28,8 @@ import {
   type SerializedEditorState,
 } from 'lexical';
 
-import { useDocumentId } from '../hooks/use-document-id';
+import { toast } from '~/components/ui/toast';
+
 import { deleteDocument, upsertDocument } from '../mutations';
 
 const theme: EditorThemeClasses = {
@@ -70,6 +72,7 @@ const placeholderText = 'Start writing...';
 
 interface DocEditorProps {
   content?: SerializedEditorState | null;
+  docId: string;
 }
 
 function AutoSavePlugin({ id }: { id: string }) {
@@ -103,12 +106,22 @@ function AutoSavePlugin({ id }: { id: string }) {
   );
 }
 
-export function DocEditor({ content }: DocEditorProps) {
-  const id = useDocumentId();
+export function DocEditor({ content, docId }: DocEditorProps) {
+  const { id } = useParams<{ id: string }>();
+
+  useEffect(() => {
+    if (id === 'new') {
+      window.history.replaceState(null, '', `/docs/${docId}`);
+    }
+  }, [id, docId]);
 
   const onClickCtrlDelete = useEffectEvent(() => {
     startTransition(async () => {
-      await deleteDocument(id);
+      await deleteDocument(docId);
+      toast.add({
+        title: 'Deleted',
+        description: 'Document deleted successfully',
+      });
     });
   });
 
@@ -163,7 +176,7 @@ export function DocEditor({ content }: DocEditorProps) {
               </div>
             }
           />
-          <AutoSavePlugin id={id} />
+          <AutoSavePlugin id={docId} />
         </div>
         <MarkdownShortcutPlugin />
       </LexicalExtensionComposer>
