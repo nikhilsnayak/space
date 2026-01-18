@@ -5,6 +5,7 @@
   },
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "prettier.prettier-vscode",
+  "tailwindCSS.classFunctions": ["cva"],
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.tsdk": "node_modules/typescript/lib"
 }

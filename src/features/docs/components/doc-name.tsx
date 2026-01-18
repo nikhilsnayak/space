@@ -27,6 +27,7 @@ export function DocName(props: { name?: string | null; docId: string }) {
         <input
           name='name'
           defaultValue={name || 'Untitled Doc'}
+          aria-label='Document name'
           className='field-sizing-content max-w-3xl rounded-none px-2 py-1 text-ellipsis'
           spellCheck={false}
           autoComplete='off'

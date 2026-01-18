@@ -157,6 +157,21 @@
   #root {
     @apply isolate min-h-full;
   }
+
+  /* Enhanced focus states for better accessibility */
+  :focus-visible {
+    @apply outline-ring outline-2 outline-offset-2;
+  }
+
+  /* Improved link focus states */
+  a:focus-visible {
+    @apply outline-ring outline-2 outline-offset-2;
+  }
+
+  /* Better button focus states */
+  button:focus-visible {
+    @apply outline-ring outline-2 outline-offset-2;
+  }
 }
 
 @custom-variant data-open {
@@ -225,5 +240,20 @@
 
   &::-webkit-scrollbar {
     display: none;
+  }
+}
+
+/* Utility classes for common interaction patterns */
+@layer utilities {
+  .transition-interactive {
+    @apply transition-all duration-150 ease-in-out;
+  }
+
+  .hover-lift {
+    @apply transition-transform duration-150 hover:scale-[1.02];
+  }
+
+  .focus-ring {
+    @apply focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none;
   }
 }

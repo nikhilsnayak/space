@@ -86,7 +86,8 @@ export function StickyNote({
           <Button
             variant='destructive'
             size='icon'
-            className='absolute top-0 right-0 size-5 translate-x-1/2 -translate-y-1/2 rounded-full p-0'
+            aria-label='Delete note'
+            className='absolute top-0 right-0 size-5 translate-x-1/2 -translate-y-1/2 p-0'
             onClick={() => board.deleteNote(id)}
           >
             <XIcon className='size-4' />
@@ -115,7 +116,7 @@ export function StickyNote({
             onPointerDown={(e) => {
               dragControls.start(e);
             }}
-            className='mx-auto mt-1 mb-2 h-2.5 w-12 cursor-grab rounded-full bg-gray-700 transition-shadow'
+            className='mx-auto mt-1 mb-2 h-2.5 w-12 cursor-grab bg-gray-700 transition-shadow'
           />
         </>
       ) : null}

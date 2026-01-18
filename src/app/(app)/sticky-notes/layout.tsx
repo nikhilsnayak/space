@@ -14,7 +14,7 @@ export default function StickyNotesLayout({
             Sticky Notes
           </h1>
         </ViewTransition>
-        <Suspense>
+        <Suspense fallback={<BoardsListSkeleton />}>
           <ViewTransition>
             <BoardsList />
           </ViewTransition>
@@ -22,6 +22,18 @@ export default function StickyNotesLayout({
       </aside>
       {children}
     </section>
+  );
+}
+
+function BoardsListSkeleton() {
+  return (
+    <ul className='space-y-4 p-4'>
+      {Array.from({ length: 6 }).map((_, i) => (
+        <li key={i}>
+          <div className='bg-muted border-muted h-8 w-full animate-pulse border' />
+        </li>
+      ))}
+    </ul>
   );
 }
 

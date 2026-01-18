@@ -57,7 +57,7 @@ const theme: EditorThemeClasses = {
   },
   text: {
     bold: 'font-bold',
-    code: 'bg-slate-100 text-slate-800 px-1 py-0.5 rounded text-sm font-mono',
+    code: 'bg-slate-100 text-slate-800 px-1 py-0.5 text-sm font-mono',
     hashtag: 'text-blue-500',
     italic: 'italic',
     strikethrough: 'line-through',
