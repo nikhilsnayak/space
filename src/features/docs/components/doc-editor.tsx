@@ -115,33 +115,22 @@ export function DocEditor({ content, docId }: DocEditorProps) {
     }
   }, [id, docId]);
 
-  const onClickCtrlDelete = useEffectEvent(() => {
-    startTransition(async () => {
-      await deleteDocument(docId);
-      toast.add({
-        title: 'Deleted',
-        description: 'Document deleted successfully',
+  const handleKeyDown = useEffectEvent((e: KeyboardEvent) => {
+    if (e.ctrlKey && e.key === 'Delete') {
+      e.preventDefault();
+      startTransition(async () => {
+        await deleteDocument(docId);
+        toast.add({
+          title: 'Deleted',
+          description: 'Document deleted successfully',
+        });
       });
-    });
+    }
   });
 
   useEffect(() => {
-    const abortController = new AbortController();
-
-    window.addEventListener(
-      'keydown',
-      (e) => {
-        if (e.key === 'Delete' && e.ctrlKey) {
-          e.preventDefault();
-          onClickCtrlDelete();
-        }
-      },
-      { signal: abortController.signal }
-    );
-
-    return () => {
-      abortController.abort();
-    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   const editorExtension = defineExtension({

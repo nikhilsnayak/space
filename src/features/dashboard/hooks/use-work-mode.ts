@@ -1,48 +1,53 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { storage } from '~/hooks/use-local-storage';
 
-const schedule = {
-  startHour: 9,
-  endHour: 18,
-  weekdays: [false, true, true, true, true, true, false],
+import { WORK_MODE_STORAGE_KEY } from '../constants';
+
+const SCHEDULE = {
+  START_HOUR: 9,
+  END_HOUR: 18,
+  WEEKDAYS: [false, true, true, true, true, true, false],
 } as const;
 
-function checkSchedule(tz: string) {
-  const now = new Date().toLocaleString('en-US', { timeZone: tz });
-  const currentHour = new Date(now).getHours();
-  const currentDay = new Date(now).getDay();
+function checkSchedule() {
+  const currentHour = new Date().getHours();
+  const currentDay = new Date().getDay();
 
-  if (!schedule.weekdays[currentDay]) {
+  if (!SCHEDULE.WEEKDAYS[currentDay]) {
     return false;
   }
 
-  if (currentHour < schedule.startHour || currentHour >= schedule.endHour) {
+  if (currentHour < SCHEDULE.START_HOUR || currentHour >= SCHEDULE.END_HOUR) {
     return false;
   }
 
   return true;
 }
 
-const defaultEnabled = checkSchedule('Asia/Kolkata');
-
 export function useWorkMode() {
-  const isWorkMode = storage.useStorage('work-mode-enabled', defaultEnabled);
+  const isWorkMode = storage.useStorage(WORK_MODE_STORAGE_KEY, false);
+  const intervaleRef = useRef<NodeJS.Timeout | null>(null);
 
   const toggle = () => {
-    storage.setItem('work-mode-enabled', !isWorkMode);
+    if (intervaleRef.current) {
+      clearInterval(intervaleRef.current);
+    }
+    storage.setItem(WORK_MODE_STORAGE_KEY, !isWorkMode);
   };
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      const shouldBeEnabled = checkSchedule('Asia/Kolkata');
-      storage.setItem('work-mode-enabled', shouldBeEnabled);
+    intervaleRef.current = setInterval(() => {
+      const shouldBeEnabled = checkSchedule();
+      storage.setItem(WORK_MODE_STORAGE_KEY, shouldBeEnabled);
     }, 60000);
 
     return () => {
-      clearInterval(interval);
+      if (intervaleRef.current) {
+        clearInterval(intervaleRef.current);
+      }
     };
   }, []);
 

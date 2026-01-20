@@ -8,6 +8,8 @@ import { storage } from '~/hooks/use-local-storage';
 import { Button } from '~/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card';
 
+import { CLOCK_DISPLAY_STORAGE_KEY } from '../constants';
+
 const formatTime = (date: Date) => {
   return new Intl.DateTimeFormat('en-US', {
     timeZone: 'Asia/Kolkata',
@@ -32,7 +34,7 @@ export function ClockWidget() {
   const isClient = useIsClient();
   const [time, setTime] = useState(new Date());
   const display = storage.useStorage<'analog' | 'digital'>(
-    'clock-display',
+    CLOCK_DISPLAY_STORAGE_KEY,
     'analog'
   );
 
@@ -46,7 +48,7 @@ export function ClockWidget() {
 
   const handleDisplayToggle = () => {
     const newDisplay = display === 'analog' ? 'digital' : 'analog';
-    storage.setItem('clock-display', newDisplay);
+    storage.setItem(CLOCK_DISPLAY_STORAGE_KEY, newDisplay);
   };
 
   const hours = time.getHours() % 12;

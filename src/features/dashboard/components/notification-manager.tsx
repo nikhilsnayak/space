@@ -1,75 +1,48 @@
 'use client';
 
-import { useEffect, useEffectEvent, useSyncExternalStore } from 'react';
+import { useEffect } from 'react';
 
 import { storage } from '~/hooks/use-local-storage';
 
-import { useWorkMode } from '../hooks/use-work-mode';
+import {
+  LAST_NOTIFICATION_TIME_STORAGE_KEY,
+  NOTIFICATION_INTERVAL,
+  WORK_MODE_STORAGE_KEY,
+} from '../constants';
 
-function getSnapShot() {
-  return Notification.permission;
-}
+function checkReminders() {
+  const isWorkMode = storage.getItem(WORK_MODE_STORAGE_KEY, false);
+  if (!isWorkMode || Notification.permission !== 'granted') return;
 
-function getServerSnapshot() {
-  return null;
-}
+  const now = Date.now();
 
-let cb: (() => void) | null = null;
-function subscribe(callback: () => void) {
-  cb = callback;
-  return () => {
-    cb = null;
-  };
-}
+  const lastNotification = storage.getItem(
+    LAST_NOTIFICATION_TIME_STORAGE_KEY,
+    0
+  );
+  const timeSinceLastNotification = now - lastNotification;
 
-function requestPermission() {
-  Notification.requestPermission().then(cb);
+  if (timeSinceLastNotification >= NOTIFICATION_INTERVAL) {
+    new Notification('Stay hydrated!', {
+      body: "Don't forget to drink some water and take a walk.",
+      icon: '/favicon.ico',
+      requireInteraction: true,
+    });
+    storage.setItem(LAST_NOTIFICATION_TIME_STORAGE_KEY, now);
+  }
 }
 
 export function NotificationManager() {
-  const [isWorkMode] = useWorkMode();
-  const permission = useSyncExternalStore(
-    subscribe,
-    getSnapShot,
-    getServerSnapshot
-  );
-
-  const checkReminders = useEffectEvent(() => {
-    if (!isWorkMode || permission !== 'granted') return;
-
-    const now = Date.now();
-    const oneHour = 60 * 60 * 1000;
-
-    const lastNotification = storage.getItem('last-reminder-time', 0);
-    const timeSinceLastNotification = now - lastNotification;
-
-    if (timeSinceLastNotification >= oneHour) {
-      new Notification('Stay hydrated!', {
-        body: "Don't forget to drink some water and take a walk.",
-        icon: '/favicon.ico',
-        tag: 'water',
-      });
-      storage.setItem('last-reminder-time', now);
-    }
-  });
-
   useEffect(() => {
-    // Check reminders every minute
-    const checkInterval = setInterval(checkReminders, 60000); // Every minute
+    if (Notification.permission === 'default') {
+      Notification.requestPermission().then(checkReminders);
+    } else {
+      checkReminders();
+    }
 
-    // Initial checks
-    checkReminders();
-
-    return () => {
-      clearInterval(checkInterval);
-    };
+    const checkInterval = setInterval(checkReminders, NOTIFICATION_INTERVAL);
+    return () => clearInterval(checkInterval);
   }, []);
-
-  useEffect(() => {
-    if (permission === 'default') {
-      requestPermission();
-    }
-  }, [permission]);
 
   return null;
 }

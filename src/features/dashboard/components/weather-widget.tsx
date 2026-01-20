@@ -38,11 +38,6 @@ const getWeatherIcon = (condition: string) => {
 
 function getGeolocation(): Promise<LocationData | undefined> {
   return new Promise((resolve, reject) => {
-    if (!navigator.geolocation) {
-      reject(new Error('Geolocation is not supported by your browser'));
-      return;
-    }
-
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
@@ -62,9 +57,9 @@ function getGeolocation(): Promise<LocationData | undefined> {
         }
       },
       {
-        enableHighAccuracy: true,
         timeout: 10000,
         maximumAge: 300000,
+        enableHighAccuracy: true,
       }
     );
   });

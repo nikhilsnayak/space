@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useEffectEvent } from 'react';
 import { BriefcaseIcon } from 'lucide-react';
 
 import { Button } from '~/components/ui/button';
@@ -12,17 +12,17 @@ import { useWorkMode } from '../hooks/use-work-mode';
 export function WorkModeToggle() {
   const [isWorkMode, toggleWorkMode] = useWorkMode();
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.shiftKey && e.key === 'W') {
-        e.preventDefault();
-        toggleWorkMode();
-      }
-    };
+  const handleKeyDown = useEffectEvent((e: KeyboardEvent) => {
+    if (e.shiftKey && e.key === 'W') {
+      e.preventDefault();
+      toggleWorkMode();
+    }
+  });
 
+  useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [toggleWorkMode]);
+  }, []);
 
   return (
     <Card>
