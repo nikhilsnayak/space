@@ -83,6 +83,20 @@ A personal software workspace where I build and use the tools I need.
    ADMIN_EMAIL=admin@example.com
    ```
 
+   ### `OPENWEATHER_API_KEY`
+
+   API key for OpenWeatherMap, needed to fetch weather data within the app.
+
+   You can get a free API key by signing up at [https://openweathermap.org/api](https://openweathermap.org/api).
+
+   Example:
+
+   ```
+   OPENWEATHER_API_KEY=your-openweather-api-key-here
+   ```
+
+   
+
 ## Database Setup
 
 1. Push the database schema:
