@@ -6,6 +6,7 @@ import { Geist_Mono } from 'next/font/google';
 
 import { cn } from '~/lib/utils';
 import { Toaster } from '~/components/ui/toast';
+import { NotificationManager } from '~/features/dashboard/components/notification-manager';
 
 const geistMono = Geist_Mono({
   subsets: ['latin'],
@@ -26,6 +27,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
           {/* https://base-ui.com/react/overview/quick-start#set-up */}
           <div id='root'>{children}</div>
           <Toaster />
+          <NotificationManager />
         </body>
       </html>
     </ViewTransition>

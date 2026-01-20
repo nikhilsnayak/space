@@ -23,10 +23,7 @@ export function RecentlyUpdatedDocumentsSkeleton() {
 }
 
 export async function RecentlyUpdatedDocuments() {
-
- 
-   const recentlyUpdatedDocuments = await getRecentlyUpdatedDocuments();
-
+  const recentlyUpdatedDocuments = await getRecentlyUpdatedDocuments();
 
   if (recentlyUpdatedDocuments.length === 0) {
     return <p className='text-muted-foreground text-sm'>No documents found.</p>;
