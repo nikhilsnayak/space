@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import z from 'zod';
 
+import { getSession } from '~/lib/auth';
 import type { WeatherData } from '~/features/dashboard/types';
 
 // Map weather condition codes to readable conditions
@@ -34,6 +35,12 @@ const WeatherResponseSchema = z.object({
 });
 
 export async function GET(request: NextRequest) {
+  const session = await getSession();
+
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const searchParams = request.nextUrl.searchParams;
   const lat = searchParams.get('lat');
   const lon = searchParams.get('lon');

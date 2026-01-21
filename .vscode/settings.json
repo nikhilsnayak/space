@@ -5,7 +5,7 @@
   },
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "tailwindCSS.classFunctions": ["cva"],
+  "tailwindCSS.classFunctions": ["cva", "twSuggestions"],
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.tsdk": "node_modules/typescript/lib"
 }

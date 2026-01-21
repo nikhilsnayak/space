@@ -22,8 +22,9 @@ import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { TabIndentationPlugin } from '@lexical/react/LexicalTabIndentationPlugin';
 import { HeadingNode, QuoteNode } from '@lexical/rich-text';
-import { type EditorState, type SerializedEditorState } from 'lexical';
+import { type EditorThemeClasses, type SerializedEditorState } from 'lexical';
 
+import { twSuggestions } from '~/lib/utils';
 import { toast } from '~/components/ui/toast';
 
 import { deleteDocument, upsertDocument } from '../mutations';
@@ -45,9 +46,7 @@ function AutoSavePlugin({ id }: { id: string }) {
     <OnChangePlugin
       ignoreSelectionChange
       ignoreHistoryMergeTagChange
-      onChange={(editorState: EditorState) => {
-        console.log('onChange');
-
+      onChange={(editorState) => {
         if (timeoutRef.current) {
           clearTimeout(timeoutRef.current);
         }
@@ -70,11 +69,7 @@ function AutoSavePlugin({ id }: { id: string }) {
 const BASE_DOC_EDITOR_CONFIG = {
   namespace: 'DocEditor',
   onError: console.error,
-  theme: {
-    ltr: 'ltr',
-    rtl: 'rtl',
-    placeholder:
-      'text-slate-400 absolute top-0 left-0 pointer-events-none select-none',
+  theme: twSuggestions<EditorThemeClasses>({
     paragraph: 'mb-2 last:mb-0 text-sm',
     quote: 'border-l-4 border-slate-300 pl-4 italic text-slate-600 my-4',
     heading: {
@@ -99,12 +94,10 @@ const BASE_DOC_EDITOR_CONFIG = {
       hashtag: 'text-blue-500',
       italic: 'italic',
       strikethrough: 'line-through',
-      subscript: 'sub',
-      superscript: 'sup',
       underline: 'underline',
-      underlineStrikethrough: 'underline line-through',
+      underlineStrikethrough: 'underline',
     },
-  },
+  }),
   nodes: [
     HeadingNode,
     ListNode,
