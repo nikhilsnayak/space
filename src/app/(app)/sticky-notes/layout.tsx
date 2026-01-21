@@ -38,7 +38,15 @@ function BoardsListSkeleton() {
 }
 
 async function BoardsList() {
-  const boards = await getStickyNotesBoards();
+  const boardsResult = await getStickyNotesBoards();
+
+  if (boardsResult.status === 'error') {
+    return (
+      <p className='text-muted-foreground text-sm'>Failed to load boards.</p>
+    );
+  }
+
+  const boards = boardsResult.value;
 
   return <StickyNotesBoardsList boards={boards} />;
 }

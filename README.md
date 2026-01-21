@@ -95,8 +95,6 @@ A personal software workspace where I build and use the tools I need.
    OPENWEATHER_API_KEY=your-openweather-api-key-here
    ```
 
-   
-
 ## Database Setup
 
 1. Push the database schema:

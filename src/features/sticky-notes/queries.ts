@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import { Result } from 'better-result';
 import { sql } from 'drizzle-orm';
 
 import { getSession } from '~/lib/auth';
@@ -11,10 +12,13 @@ export async function findStickyNotesBoardForDate(date: string) {
     redirect('/login');
   }
 
-  const row = await db.query.StickyNotesBoard.findFirst({
-    where: { date },
+  const row = await Result.tryPromise(() => {
+    return db.query.StickyNotesBoard.findFirst({
+      where: { date },
+    });
   });
-  return row?.notes ?? [];
+
+  return Result.serialize(row.map((row) => row?.notes ?? []));
 }
 
 export async function getStickyNotesBoards() {
@@ -24,26 +28,29 @@ export async function getStickyNotesBoards() {
     redirect('/login');
   }
 
-  const rows = await db.query.StickyNotesBoard.findMany({
-    columns: {
-      date: true,
-    },
-    where: {
-      AND: [
-        {
-          notes: {
-            isNotNull: true,
+  const rows = await Result.tryPromise(() => {
+    return db.query.StickyNotesBoard.findMany({
+      columns: {
+        date: true,
+      },
+      where: {
+        AND: [
+          {
+            notes: {
+              isNotNull: true,
+            },
           },
-        },
-        {
-          RAW: (table) => sql`jsonb_array_length((${table.notes})::jsonb) > 0`,
-        },
-      ],
-    },
-    orderBy: {
-      date: 'desc',
-    },
+          {
+            RAW: (table) =>
+              sql`jsonb_array_length((${table.notes})::jsonb) > 0`,
+          },
+        ],
+      },
+      orderBy: {
+        date: 'desc',
+      },
+    });
   });
 
-  return rows.map((row) => row.date);
+  return Result.serialize(rows.map((row) => row.map((row) => row.date)));
 }

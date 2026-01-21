@@ -12,11 +12,14 @@ export function DocName(props: { name?: string | null; docId: string }) {
     async (prev: string | null, formData: FormData) => {
       const name = formData.get('name')?.toString().trim();
       const result = await upsertDocument({ id: props.docId, name });
-      toast.add({
-        title: 'Saved',
-        description: 'Document name saved successfully',
-      });
-      return result.name;
+      if (result.status === 'error') {
+        toast.add({
+          title: 'Error',
+          description: 'Failed to update document name',
+        });
+        return prev;
+      }
+      return result.value.name;
     },
     props.name || null
   );

@@ -1,6 +1,7 @@
 'use server';
 
 import { redirect } from 'next/navigation';
+import { Result } from 'better-result';
 import z from 'zod';
 
 import { getSession } from '~/lib/auth';
@@ -23,19 +24,33 @@ export async function upsertStickyNotesForDate(
     redirect('/login');
   }
 
-  const { date, notes } = UpsertStickyNotesForDateInputValidator.parse(data);
+  const result = await Result.gen(async function* () {
+    const { date, notes } = yield* Result.try(() => {
+      return UpsertStickyNotesForDateInputValidator.parse(data);
+    });
 
-  const [returning] = await db
-    .insert(StickyNotesBoard)
-    .values({
-      date,
-      notes: asJsonb(notes),
-    })
-    .onConflictDoUpdate({
-      target: StickyNotesBoard.date,
-      set: { notes: asJsonb(notes) },
-    })
-    .returning({ notes: StickyNotesBoard.notes });
+    const [returning] = yield* Result.await(
+      Result.tryPromise(() => {
+        return db
+          .insert(StickyNotesBoard)
+          .values({
+            date,
+            notes: asJsonb(notes),
+          })
+          .onConflictDoUpdate({
+            target: StickyNotesBoard.date,
+            set: { notes: asJsonb(notes) },
+          })
+          .returning({ notes: StickyNotesBoard.notes });
+      })
+    );
 
-  return returning.notes;
+    return Result.ok(returning.notes);
+  });
+
+  if (result.isErr()) {
+    console.error(result.error);
+  }
+
+  return Result.serialize(result);
 }

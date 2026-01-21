@@ -23,7 +23,15 @@ export function RecentlyUpdatedDocumentsSkeleton() {
 }
 
 export async function RecentlyUpdatedDocuments() {
-  const recentlyUpdatedDocuments = await getRecentlyUpdatedDocuments();
+  const recentlyUpdatedDocumentsResult = await getRecentlyUpdatedDocuments();
+
+  if (recentlyUpdatedDocumentsResult.status === 'error') {
+    return (
+      <p className='text-muted-foreground text-sm'>Failed to load documents.</p>
+    );
+  }
+
+  const recentlyUpdatedDocuments = recentlyUpdatedDocumentsResult.value;
 
   if (recentlyUpdatedDocuments.length === 0) {
     return <p className='text-muted-foreground text-sm'>No documents found.</p>;

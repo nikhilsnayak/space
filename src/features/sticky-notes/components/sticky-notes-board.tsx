@@ -25,11 +25,14 @@ export function StickyNotesBoard({
   const [notes, upsertStickyNotesForDateAction] = useActionState(
     async (prev: Array<Note>, notes: Array<Note>) => {
       const result = await upsertStickyNotesForDate({ date, notes });
-      toast.add({
-        title: 'Saved',
-        description: 'Notes saved successfully',
-      });
-      return result;
+      if (result.status === 'error') {
+        toast.add({
+          title: 'Error',
+          description: 'Failed to save notes',
+        });
+        return prev;
+      }
+      return result.value;
     },
     initialNotes
   );

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { Result } from 'better-result';
 import { eq } from 'drizzle-orm';
 import z from 'zod';
 
@@ -26,33 +27,49 @@ export async function upsertDocument(
     redirect('/login');
   }
 
-  const { id, name, content } = UpsertDocumentInputValidator.parse(data);
+  const result = await Result.gen(async function* () {
+    const { id, name, content } = yield* Result.try(() => {
+      return UpsertDocumentInputValidator.parse(data);
+    });
 
-  const setFields: {
-    name?: string | null;
-    content?: ReturnType<typeof asJsonb>;
-  } = {};
+    const setFields: {
+      name?: string | null;
+      content?: ReturnType<typeof asJsonb>;
+    } = {};
 
-  if (name !== undefined) {
-    setFields.name = name;
+    if (name !== undefined) {
+      setFields.name = name;
+    }
+
+    if (content !== undefined) {
+      setFields.content = asJsonb(content);
+    }
+
+    const [returning] = yield* Result.await(
+      Result.tryPromise(() => {
+        return db
+          .insert(Document)
+          .values({ id, ...setFields })
+          .onConflictDoUpdate({
+            target: Document.id,
+            set: setFields,
+          })
+          .returning({
+            name: Document.name,
+          });
+      })
+    );
+
+    return Result.ok(returning);
+  });
+
+  if (result.isErr()) {
+    console.error(result.error);
+  } else {
+    revalidatePath('/docs');
   }
 
-  if (content !== undefined) {
-    setFields.content = asJsonb(content);
-  }
-
-  const [returning] = await db
-    .insert(Document)
-    .values({ id, ...setFields })
-    .onConflictDoUpdate({
-      target: Document.id,
-      set: setFields,
-    })
-    .returning();
-
-  revalidatePath('/docs');
-
-  return returning;
+  return Result.serialize(result);
 }
 
 export async function deleteDocument(id: string) {
@@ -62,9 +79,13 @@ export async function deleteDocument(id: string) {
     redirect('/login');
   }
 
-  await db.delete(Document).where(eq(Document.id, id));
+  const result = await Result.tryPromise(() => {
+    return db.delete(Document).where(eq(Document.id, id));
+  });
 
-  revalidatePath('/docs');
+  if (result.isErr()) {
+    console.error(result.error);
+  }
 
-  redirect('/docs');
+  return Result.serialize(result);
 }

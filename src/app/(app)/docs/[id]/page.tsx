@@ -2,15 +2,26 @@ import { FileTextIcon } from 'lucide-react';
 
 import { BackButton } from '~/components/ui/back-button';
 import { HomeButton } from '~/components/ui/home-button';
-import { DocEditor } from '~/features/docs/components/doc-editor';
+import {
+  DocEditor,
+  DocEditorProvider,
+} from '~/features/docs/components/doc-editor';
 import { DocName } from '~/features/docs/components/doc-name';
 import { findDocument } from '~/features/docs/queries';
 
 export default async function DocPage({ params }: PageProps<'/docs/[id]'>) {
   const { id } = await params;
 
-  const document = id !== 'new' ? await findDocument(id) : null;
+  const documentResult = id !== 'new' ? await findDocument(id) : null;
 
+  if (documentResult?.status === 'error') {
+    return (
+      <p className='text-muted-foreground text-sm'>Failed to load document.</p>
+    );
+  }
+
+  const document =
+    documentResult?.status === 'ok' ? documentResult.value : null;
   const docId = id === 'new' ? crypto.randomUUID() : id;
 
   return (
@@ -26,7 +37,9 @@ export default async function DocPage({ params }: PageProps<'/docs/[id]'>) {
         <HomeButton />
       </header>
       <div className='mx-auto flex w-full max-w-(--breakpoint-xl) items-stretch justify-between p-4'>
-        <DocEditor key={docId} content={document?.content} docId={docId} />
+        <DocEditorProvider content={document?.content}>
+          <DocEditor key={docId} docId={docId} />
+        </DocEditorProvider>
       </div>
     </section>
   );
