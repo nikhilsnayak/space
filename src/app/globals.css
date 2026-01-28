@@ -115,28 +115,39 @@
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
   --font-mono: var(--font-geist-mono);
+  --animate-twinkle: twinkle 4s ease-in-out infinite;
+  --animate-twinkle-slow: twinkle-slow 6s ease-in-out infinite;
+  --animate-twinkle-bright: twinkle-bright 3s ease-in-out infinite;
 
-  @keyframes accordion-down {
-    from {
-      height: 0;
+  @keyframes twinkle {
+    0%,
+    100% {
+      opacity: 0.6;
     }
-    to {
-      height: var(
-        --radix-accordion-content-height,
-        var(--accordion-panel-height, auto)
-      );
+    50% {
+      opacity: 0.2;
     }
   }
 
-  @keyframes accordion-up {
-    from {
-      height: var(
-        --radix-accordion-content-height,
-        var(--accordion-panel-height, auto)
-      );
+  @keyframes twinkle-slow {
+    0%,
+    100% {
+      opacity: 0.4;
     }
-    to {
-      height: 0;
+    50% {
+      opacity: 0.15;
+    }
+  }
+
+  @keyframes twinkle-bright {
+    0%,
+    100% {
+      opacity: 0.8;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.3;
+      transform: scale(0.8);
     }
   }
 }
@@ -156,21 +167,6 @@
 
   #root {
     @apply isolate min-h-full;
-  }
-
-  /* Enhanced focus states for better accessibility */
-  :focus-visible {
-    @apply outline-ring outline-2 outline-offset-2;
-  }
-
-  /* Improved link focus states */
-  a:focus-visible {
-    @apply outline-ring outline-2 outline-offset-2;
-  }
-
-  /* Better button focus states */
-  button:focus-visible {
-    @apply outline-ring outline-2 outline-offset-2;
   }
 }
 
@@ -240,20 +236,5 @@
 
   &::-webkit-scrollbar {
     display: none;
-  }
-}
-
-/* Utility classes for common interaction patterns */
-@layer utilities {
-  .transition-interactive {
-    @apply transition-all duration-150 ease-in-out;
-  }
-
-  .hover-lift {
-    @apply transition-transform duration-150 hover:scale-[1.02];
-  }
-
-  .focus-ring {
-    @apply focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none;
   }
 }

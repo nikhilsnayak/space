@@ -29,24 +29,25 @@ function checkSchedule() {
 
 export function useWorkMode() {
   const isWorkMode = storage.useStorage(WORK_MODE_STORAGE_KEY, false);
-  const intervaleRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const toggle = () => {
-    if (intervaleRef.current) {
-      clearInterval(intervaleRef.current);
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
     }
     storage.setItem(WORK_MODE_STORAGE_KEY, !isWorkMode);
   };
 
   useEffect(() => {
-    intervaleRef.current = setInterval(() => {
+    checkSchedule();
+    intervalRef.current = setInterval(() => {
       const shouldBeEnabled = checkSchedule();
       storage.setItem(WORK_MODE_STORAGE_KEY, shouldBeEnabled);
     }, 60000);
 
     return () => {
-      if (intervaleRef.current) {
-        clearInterval(intervaleRef.current);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
       }
     };
   }, []);

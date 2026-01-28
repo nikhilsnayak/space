@@ -1,6 +1,5 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { Result } from 'better-result';
 import { eq } from 'drizzle-orm';
@@ -65,8 +64,6 @@ export async function upsertDocument(
 
   if (result.isErr()) {
     console.error(result.error);
-  } else {
-    revalidatePath('/docs');
   }
 
   return Result.serialize(result);

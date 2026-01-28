@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { HomeIcon } from 'lucide-react';
 
-import { Button } from './button';
+import { Button } from './ui/button';
 
 export function HomeButton({
   size = 'icon-sm',

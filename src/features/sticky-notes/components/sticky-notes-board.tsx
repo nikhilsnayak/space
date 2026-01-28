@@ -3,7 +3,6 @@
 import { startTransition, useActionState, useOptimistic, useRef } from 'react';
 import { AnimatePresence } from 'motion/react';
 
-import { TODAY } from '~/lib/constants';
 import { cn } from '~/lib/utils';
 import { toast } from '~/components/ui/toast';
 
@@ -74,11 +73,8 @@ export function StickyNotesBoard({
     performUpsert(optimisticNotes.filter((note) => note.id !== id));
   };
 
-  const editable = date === TODAY;
-
   const board = {
     ref: boardRef,
-    editable,
     updateNote,
     deleteNote,
   };
@@ -86,10 +82,7 @@ export function StickyNotesBoard({
   return (
     <div
       ref={boardRef}
-      className={cn(
-        'relative isolate h-full w-full overflow-hidden',
-        !editable && 'pointer-events-none'
-      )}
+      className={cn('relative isolate h-full w-full overflow-hidden')}
       onClick={(e) => {
         if (!e.altKey) return;
         const rect = e.currentTarget.getBoundingClientRect();

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import z from 'zod';
 
 import { getSession } from '~/lib/auth';
-import type { WeatherData } from '~/features/dashboard/types';
+import type { WeatherData } from '~/features/control-center/types';
 
 // Map weather condition codes to readable conditions
 const getCondition = (code: number): string => {

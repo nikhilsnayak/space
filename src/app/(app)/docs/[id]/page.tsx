@@ -1,7 +1,7 @@
 import { FileTextIcon } from 'lucide-react';
 
-import { BackButton } from '~/components/ui/back-button';
-import { HomeButton } from '~/components/ui/home-button';
+import { BackButton } from '~/components/back-button';
+import { HomeButton } from '~/components/home-button';
 import {
   DocEditor,
   DocEditorProvider,
@@ -16,7 +16,16 @@ export default async function DocPage({ params }: PageProps<'/docs/[id]'>) {
 
   if (documentResult?.status === 'error') {
     return (
-      <p className='text-muted-foreground text-sm'>Failed to load document.</p>
+      <div className='flex min-h-dvh items-center justify-center'>
+        <div className='relative overflow-hidden border border-red-500/30 bg-red-500/10 p-4'>
+          <div className='flex items-center gap-2'>
+            <div className='size-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]' />
+            <span className='text-xs tracking-wider text-red-500 uppercase'>
+              Failed to load document
+            </span>
+          </div>
+        </div>
+      </div>
     );
   }
 
@@ -25,21 +34,34 @@ export default async function DocPage({ params }: PageProps<'/docs/[id]'>) {
   const docId = id === 'new' ? crypto.randomUUID() : id;
 
   return (
-    <section className='grid min-h-dvh w-full grid-rows-[auto_1fr] gap-4'>
-      <header className='bg-background/50 sticky top-0 z-10 flex w-full items-center justify-between border-b p-4 shadow-sm backdrop-blur-sm'>
-        <div className='flex items-center gap-4'>
-          <BackButton />
-          <h1 className='flex items-center gap-2 text-2xl'>
-            <FileTextIcon />
+    <section className='relative z-10 grid min-h-dvh w-full grid-rows-[auto_1fr]'>
+      <header className='bg-background/80 sticky top-0 z-10 border-b border-white/10 backdrop-blur-sm'>
+        <div className='flex w-full items-center gap-4 p-4'>
+          <div className='flex items-center gap-4'>
+            <BackButton className='border-white/10 hover:border-white/20 hover:bg-white/5' />
+            <HomeButton className='border-white/10 hover:border-white/20 hover:bg-white/5' />
+          </div>
+
+          <div className='flex flex-1 items-center justify-center gap-3'>
+            <FileTextIcon className='text-muted-foreground size-4' />
             <DocName key={docId} name={document?.name} docId={docId} />
-          </h1>
+          </div>
         </div>
-        <HomeButton />
       </header>
-      <div className='mx-auto flex w-full max-w-(--breakpoint-xl) items-stretch justify-between p-4'>
-        <DocEditorProvider content={document?.content}>
-          <DocEditor key={docId} docId={docId} />
-        </DocEditorProvider>
+
+      <div className='relative overflow-hidden'>
+        <div className='mx-auto flex h-full w-full max-w-(--breakpoint-xl) flex-col p-4'>
+          <div className='bg-card/80 relative flex-1 overflow-hidden border border-white/10 backdrop-blur-sm'>
+            <div className='absolute top-0 left-0 h-3 w-3 border-t-2 border-l-2 border-white/20' />
+            <div className='absolute top-0 right-0 h-3 w-3 border-t-2 border-r-2 border-white/20' />
+            <div className='absolute bottom-0 left-0 h-3 w-3 border-b-2 border-l-2 border-white/20' />
+            <div className='absolute right-0 bottom-0 h-3 w-3 border-r-2 border-b-2 border-white/20' />
+
+            <DocEditorProvider content={document?.content}>
+              <DocEditor key={docId} docId={docId} />
+            </DocEditorProvider>
+          </div>
+        </div>
       </div>
     </section>
   );

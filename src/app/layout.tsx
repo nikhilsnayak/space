@@ -6,7 +6,8 @@ import { Geist_Mono } from 'next/font/google';
 
 import { cn } from '~/lib/utils';
 import { Toaster } from '~/components/ui/toast';
-import { NotificationManager } from '~/features/dashboard/components/notification-manager';
+import { StarBackground } from '~/components/star-background';
+import { NotificationManager } from '~/features/control-center/components/notification-manager';
 
 const geistMono = Geist_Mono({
   subsets: ['latin'],
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
           <div id='root'>{children}</div>
           <Toaster />
           <NotificationManager />
+          <StarBackground />
         </body>
       </html>
     </ViewTransition>

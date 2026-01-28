@@ -4,7 +4,6 @@ import type { Note } from '../../schema';
 
 export const StickyNotesBoardContext = createContext<{
   ref: React.RefObject<HTMLDivElement | null>;
-  editable: boolean;
   updateNote: (id: string, updates: Partial<Note>) => void;
   deleteNote: (id: string) => void;
 } | null>(null);

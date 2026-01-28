@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { ArrowLeftIcon } from 'lucide-react';
 
-import { Button } from './button';
+import { Button } from './ui/button';
 
 export function BackButton({
   size = 'icon-sm',
