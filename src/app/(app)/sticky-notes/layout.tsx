@@ -1,6 +1,18 @@
 import { Suspense, ViewTransition } from 'react';
 import { StickyNoteIcon } from 'lucide-react';
 
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarProvider,
+} from '~/components/ui/sidebar';
 import { StickyNotesBoardsList } from '~/features/sticky-notes/components/sticky-notes-boards-list';
 import { getStickyNotesBoards } from '~/features/sticky-notes/queries';
 
@@ -8,9 +20,9 @@ export default function StickyNotesLayout({
   children,
 }: LayoutProps<'/sticky-notes'>) {
   return (
-    <section className='grid h-dvh grid-cols-[260px_1fr]'>
-      <aside className='bg-card/50 h-full overflow-hidden border-r border-white/10'>
-        <div className='border-b border-white/10 p-5'>
+    <SidebarProvider>
+      <Sidebar className='border-r border-white/10'>
+        <SidebarHeader className='border-b border-white/10 p-5'>
           <ViewTransition name='sticky-notes'>
             <div className='flex items-center justify-center gap-2'>
               <StickyNoteIcon
@@ -22,33 +34,36 @@ export default function StickyNotesLayout({
               </h1>
             </div>
           </ViewTransition>
-        </div>
-
-        <div className='p-4'>
-          <h2 className='text-muted-foreground mb-3 text-[10px] font-semibold tracking-[0.15em] uppercase'>
-            Boards
-          </h2>
-          <Suspense fallback={<BoardsListSkeleton />}>
-            <ViewTransition>
-              <BoardsList />
-            </ViewTransition>
-          </Suspense>
-        </div>
-      </aside>
-      {children}
-    </section>
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupLabel className='text-muted-foreground text-[10px] font-semibold tracking-[0.15em] uppercase'>
+              Boards
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <Suspense fallback={<BoardsListSkeleton />}>
+                <ViewTransition>
+                  <BoardsList />
+                </ViewTransition>
+              </Suspense>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+      </Sidebar>
+      <SidebarInset>{children}</SidebarInset>
+    </SidebarProvider>
   );
 }
 
 function BoardsListSkeleton() {
   return (
-    <ul className='space-y-2'>
+    <SidebarMenu>
       {Array.from({ length: 6 }).map((_, i) => (
-        <li key={i}>
+        <SidebarMenuItem key={i}>
           <div className='h-9 w-full animate-pulse border border-white/10 bg-white/5' />
-        </li>
+        </SidebarMenuItem>
       ))}
-    </ul>
+    </SidebarMenu>
   );
 }
 
@@ -57,7 +72,7 @@ async function BoardsList() {
 
   if (boardsResult.status === 'error') {
     return (
-      <div className='flex items-center gap-2'>
+      <div className='flex items-center gap-2 px-2'>
         <div className='size-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]' />
         <span className='text-xs tracking-wider text-red-500 uppercase'>
           Failed to load

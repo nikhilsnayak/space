@@ -7,6 +7,11 @@ import { CalendarIcon } from 'lucide-react';
 
 import { TODAY } from '~/lib/constants';
 import { cn } from '~/lib/utils';
+import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from '~/components/ui/sidebar';
 
 export function StickyNotesBoardsList({ boards }: { boards: Array<string> }) {
   const { date } = useParams<{ date: string }>();
@@ -14,19 +19,20 @@ export function StickyNotesBoardsList({ boards }: { boards: Array<string> }) {
   const allBoards = boards[0] === TODAY ? boards : [TODAY, ...boards];
 
   return (
-    <ul className='space-y-2'>
+    <SidebarMenu>
       {allBoards.map((board) => {
         const isActive = date === board;
         const isTodayBoard = isToday(parseISO(board));
 
         return (
-          <li key={board}>
-            <Link
-              href={`/sticky-notes/${board}`}
+          <SidebarMenuItem key={board}>
+            <SidebarMenuButton
+              render={<Link href={`/sticky-notes/${board}`} />}
+              isActive={isActive}
               className={cn(
-                'group relative flex w-full items-center gap-3 border px-3 py-2 text-left text-sm transition-all duration-200',
+                'h-auto gap-3 border py-2 transition-all duration-200',
                 isActive
-                  ? 'border-primary/30 bg-primary/10'
+                  ? 'border-primary/30 bg-primary/10 hover:bg-primary/15'
                   : 'border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10'
               )}
             >
@@ -52,10 +58,10 @@ export function StickyNotesBoardsList({ boards }: { boards: Array<string> }) {
                   {format(parseISO(board), 'yyyy-MM-dd')}
                 </span>
               </div>
-            </Link>
-          </li>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
         );
       })}
-    </ul>
+    </SidebarMenu>
   );
 }

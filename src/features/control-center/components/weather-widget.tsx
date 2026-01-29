@@ -3,7 +3,6 @@
 import {
   CloudIcon,
   CloudRainIcon,
-  LoaderIcon,
   RadarIcon,
   RefreshCwIcon,
   SunIcon,
@@ -12,6 +11,7 @@ import useSWR from 'swr';
 
 import { cn } from '~/lib/utils';
 import { Button } from '~/components/ui/button';
+import { Skeleton } from '~/components/ui/skeleton';
 import { ControlPanel } from '~/features/control-center/components/control-panel';
 
 import { WeatherDataSchema } from '../schema';
@@ -124,8 +124,26 @@ export function WeatherWidget() {
       }
     >
       {loading && !weatherData && (
-        <div className='flex items-center justify-center py-8'>
-          <LoaderIcon className='text-muted-foreground size-8 animate-spin' />
+        <div className='space-y-4'>
+          <div className='flex items-center gap-2'>
+            <Skeleton className='size-3' />
+            <Skeleton className='h-3 w-16' />
+            <Skeleton className='h-3 w-24' />
+          </div>
+          <div className='flex items-center justify-between'>
+            <Skeleton className='h-10 w-24 sm:h-12 sm:w-28' />
+            <Skeleton className='size-10 rounded-full' />
+          </div>
+          <div className='grid grid-cols-2 gap-4 border-t border-white/10 pt-4'>
+            <div className='space-y-1'>
+              <Skeleton className='h-3 w-14' />
+              <Skeleton className='h-6 w-12' />
+            </div>
+            <div className='space-y-1'>
+              <Skeleton className='h-3 w-16' />
+              <Skeleton className='h-6 w-16' />
+            </div>
+          </div>
         </div>
       )}
 
@@ -154,9 +172,11 @@ export function WeatherWidget() {
           {/* Main Display */}
           <div className='flex items-center justify-between'>
             <div>
-              <div className='font-mono text-4xl font-bold tabular-nums'>
+              <div className='font-mono text-2xl font-bold tabular-nums sm:text-3xl lg:text-4xl'>
                 {weatherData.current.temp}
-                <span className='text-muted-foreground text-2xl'>°C</span>
+                <span className='text-muted-foreground text-xl sm:text-2xl'>
+                  °C
+                </span>
               </div>
             </div>
             <div>{getWeatherIcon(weatherData.current.condition)}</div>

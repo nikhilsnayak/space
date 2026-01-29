@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { GaugeIcon, LoaderIcon } from 'lucide-react';
+import { GaugeIcon } from 'lucide-react';
 
 import { useIsClient } from '~/hooks/use-is-client';
 import { storage } from '~/hooks/use-local-storage';
@@ -77,7 +77,7 @@ export function ClockWidget() {
       {isClient ? (
         display === 'digital' ? (
           <div className='space-y-3'>
-            <div className='font-mono text-5xl font-bold tracking-wider tabular-nums'>
+            <div className='font-mono text-3xl font-bold tracking-wider tabular-nums sm:text-4xl lg:text-5xl'>
               {formatTime(time)}
             </div>
             <div className='text-muted-foreground text-sm'>
@@ -93,10 +93,8 @@ export function ClockWidget() {
         ) : (
           <div className='grid place-items-center gap-4'>
             <svg
-              width='180'
-              height='180'
               viewBox='0 0 200 200'
-              className='drop-shadow-lg'
+              className='aspect-square w-32 drop-shadow-lg sm:w-40 lg:w-[180px]'
             >
               {/* Outer glow ring */}
               <circle
@@ -236,8 +234,28 @@ export function ClockWidget() {
           </div>
         )
       ) : (
-        <div className='flex items-center justify-center py-4'>
-          <LoaderIcon className='text-muted-foreground size-8 animate-spin' />
+        <div className='grid place-items-center py-6'>
+          <div className='flex items-center gap-1'>
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className='bg-muted-foreground/40 h-8 w-1.5 animate-pulse rounded-full'
+                style={{ animationDelay: `${i * 150}ms` }}
+              />
+            ))}
+            <div className='bg-primary/50 mx-1 size-1.5 animate-pulse rounded-full' />
+            {[3, 4, 5].map((i) => (
+              <div
+                key={i}
+                className='bg-muted-foreground/40 h-8 w-1.5 animate-pulse rounded-full'
+                style={{ animationDelay: `${i * 150}ms` }}
+              />
+            ))}
+          </div>
+          <div className='text-muted-foreground/50 mt-4 flex items-center gap-1.5 text-xs'>
+            <GaugeIcon className='size-3' />
+            <span className='tracking-wider uppercase'>Asia/Kolkata</span>
+          </div>
         </div>
       )}
     </ControlPanel>

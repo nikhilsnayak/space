@@ -1,20 +1,19 @@
 'use client';
 
-import { startTransition, useActionState, useOptimistic, useRef } from 'react';
-import { AnimatePresence } from 'motion/react';
+import { startTransition, useActionState, useOptimistic } from 'react';
 
-import { cn } from '~/lib/utils';
 import { toast } from '~/components/ui/toast';
 
 import { upsertStickyNotesForDate } from '../mutations';
 import type { Note } from '../schema';
 import { getRandomNoteColor, getRandomNoteRotate } from '../utils';
 import { StickyNotesBoardContext } from './context/sticky-notes-board-context';
-import { StickyNote } from './sticky-note';
+import { StickyNotesBoardCanvas } from './sticky-notes-board-canvas';
+import { StickyNotesList } from './sticky-notes-list';
 
 interface StickyNotesBoardProps {
   date: string;
-  notes: Array<Note>;
+  notes: Note[];
 }
 
 export function StickyNotesBoard({
@@ -35,8 +34,8 @@ export function StickyNotesBoard({
     },
     initialNotes
   );
+
   const [optimisticNotes, setOptimisticNotes] = useOptimistic(notes);
-  const boardRef = useRef<HTMLDivElement>(null);
 
   const performUpsert = (updatedNotes: Array<Note>) => {
     startTransition(() => {
@@ -74,30 +73,18 @@ export function StickyNotesBoard({
   };
 
   const board = {
-    ref: boardRef,
+    notes: optimisticNotes,
+    addNote,
     updateNote,
     deleteNote,
   };
 
   return (
-    <div
-      ref={boardRef}
-      className={cn('relative isolate h-full w-full overflow-hidden')}
-      onClick={(e) => {
-        if (!e.altKey) return;
-        const rect = e.currentTarget.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        addNote({ x, y });
-      }}
-    >
-      <StickyNotesBoardContext value={board}>
-        <AnimatePresence>
-          {optimisticNotes.map((note) => (
-            <StickyNote key={note.id} note={note} />
-          ))}
-        </AnimatePresence>
-      </StickyNotesBoardContext>
-    </div>
+    <StickyNotesBoardContext value={board}>
+      {/* Mobile: List view */}
+      <StickyNotesList />
+      {/* Desktop: Canvas board */}
+      <StickyNotesBoardCanvas />
+    </StickyNotesBoardContext>
   );
 }

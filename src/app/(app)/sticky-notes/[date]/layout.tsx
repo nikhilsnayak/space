@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { format, isToday, parseISO } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 
+import { SidebarTrigger } from '~/components/ui/sidebar';
 import { BackButton } from '~/components/back-button';
 import { HomeButton } from '~/components/home-button';
 import blackBoardImage from '~/features/sticky-notes/assets/black-board.jpg';
@@ -18,11 +19,12 @@ export default function StickyNotesBoardLayout({
 
   return (
     <div className='grid h-full grid-rows-[auto_1fr]'>
-      <header className='bg-card/50 border-b border-white/10 backdrop-blur-sm'>
+      <header className='bg-sidebar border-b border-white/10 backdrop-blur-sm'>
         <div className='flex w-full items-center justify-between p-4'>
           <div className='flex items-center gap-2'>
             <BackButton className='border-white/10 hover:border-white/20 hover:bg-white/5' />
             <HomeButton className='border-white/10 hover:border-white/20 hover:bg-white/5' />
+            <SidebarTrigger className='border-white/10 hover:border-white/20 hover:bg-white/5' />
           </div>
 
           <ViewTransition>

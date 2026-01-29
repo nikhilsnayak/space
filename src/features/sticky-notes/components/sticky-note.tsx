@@ -24,7 +24,6 @@ export function StickyNote({
       dragControls={dragControls}
       dragListener={false}
       dragMomentum={false}
-      // dragConstraints={board.ref} // for some f***ing reason the transform was misbehaving with drag constraints. need to investigate further
       whileDrag={{
         scale: 1.1,
         boxShadow: '0px 10px 20px rgba(0,0,0,0.2)',
@@ -124,9 +123,12 @@ export function StickyNote({
           placeholder='add your note here...'
           onBlur={(e) => {
             const newText = e.target.value.trim();
-            if (!newText) return;
-            setIsEditing(false);
-            board.updateNote(id, { text: newText });
+            if (newText) {
+              board.updateNote(id, { text: newText });
+              setIsEditing(false);
+            } else if (text) {
+              setIsEditing(false);
+            }
           }}
           className='w-full cursor-text resize-none border-none p-2 text-base outline-none'
         />
