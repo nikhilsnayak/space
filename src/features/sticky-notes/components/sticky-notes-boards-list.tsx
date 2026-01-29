@@ -11,9 +11,11 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from '~/components/ui/sidebar';
 
 export function StickyNotesBoardsList({ boards }: { boards: Array<string> }) {
+  const { toggleSidebar } = useSidebar();
   const { date } = useParams<{ date: string }>();
 
   const allBoards = boards[0] === TODAY ? boards : [TODAY, ...boards];
@@ -29,6 +31,7 @@ export function StickyNotesBoardsList({ boards }: { boards: Array<string> }) {
             <SidebarMenuButton
               render={<Link href={`/sticky-notes/${board}`} />}
               isActive={isActive}
+              onClick={toggleSidebar}
               className={cn(
                 'h-auto gap-3 border py-2 transition-all duration-200',
                 isActive
